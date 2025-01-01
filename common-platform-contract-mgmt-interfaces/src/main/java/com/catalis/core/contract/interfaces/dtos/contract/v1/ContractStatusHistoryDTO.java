@@ -1,0 +1,27 @@
+package com.catalis.core.contract.interfaces.dtos.contract.v1;
+
+import com.catalis.core.contract.interfaces.dtos.BaseDTO;
+import com.catalis.core.contract.interfaces.enums.contract.v1.StatusCodeEnum;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
+
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ContractStatusHistoryDTO extends BaseDTO {
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Long contractStatusHistoryId;
+
+    private Long contractId;
+    private StatusCodeEnum statusCode;
+    private LocalDateTime statusStartDate;
+    private LocalDateTime statusEndDate;
+
+}

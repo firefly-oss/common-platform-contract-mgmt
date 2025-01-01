@@ -1,0 +1,29 @@
+package com.catalis.core.contract.interfaces.dtos.contract.v1;
+
+import com.catalis.core.contract.interfaces.dtos.BaseDTO;
+import com.catalis.core.contract.interfaces.enums.contract.v1.RoleInContractEnum;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
+
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ContractPartyDTO extends BaseDTO {
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Long contractPartyId;
+
+    private Long contractId;
+    private Long partyId;
+    private RoleInContractEnum roleInContract;
+    private LocalDateTime dateJoined;
+    private LocalDateTime dateLeft;
+    private Boolean active;
+
+}
