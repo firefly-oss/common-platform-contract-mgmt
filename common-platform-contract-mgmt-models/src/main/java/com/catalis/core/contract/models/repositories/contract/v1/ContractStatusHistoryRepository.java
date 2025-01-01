@@ -1,0 +1,28 @@
+package com.catalis.core.contract.models.repositories.contract.v1;
+
+import com.catalis.core.contract.interfaces.enums.contract.v1.StatusCodeEnum;
+import com.catalis.core.contract.models.entities.contract.v1.ContractStatusHistory;
+import com.catalis.core.contract.models.repositories.BaseRepository;
+import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
+
+public interface ContractStatusHistoryRepository extends BaseRepository<ContractStatusHistory, Long> {
+
+    Flux<ContractStatusHistory> findByContractIdOrderByStatusStartDateDesc(Long contractId, Pageable pageable);
+    Mono<Long> countByContractId(Long contractId);
+
+    Flux<ContractStatusHistory> findByStatusCode(StatusCodeEnum statusCode, Pageable pageable);
+
+    Flux<ContractStatusHistory> findByContractIdAndStatusStartDateGreaterThan(
+            Long contractId,
+            LocalDateTime startDate,
+            Pageable pageable
+    );
+
+    Mono<ContractStatusHistory> findFirstByContractIdOrderByStatusStartDateDesc(Long contractId);
+
+
+}
