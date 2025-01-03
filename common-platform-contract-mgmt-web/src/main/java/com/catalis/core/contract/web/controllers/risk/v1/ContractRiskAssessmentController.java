@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -54,8 +55,9 @@ public class ContractRiskAssessmentController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractRiskAssessmentDTO> createContractRiskAssessment(@RequestBody ContractRiskAssessmentDTO dto) {
-        return createService.createContractRiskAssessment(dto);
+    public Mono<ResponseEntity<ContractRiskAssessmentDTO>> createContractRiskAssessment(@RequestBody ContractRiskAssessmentDTO dto) {
+        return createService.createContractRiskAssessment(dto)
+                .map(createdDto -> ResponseEntity.status(HttpStatus.CREATED).body(createdDto));
     }
 
     /**
@@ -77,14 +79,16 @@ public class ContractRiskAssessmentController {
                     @ApiResponse(responseCode = "404", description = "Contract risk assessment not found", content = @Content)
             }
     )
-    public Mono<ContractRiskAssessmentDTO> getContractRiskAssessmentById(@PathVariable Long id) {
-        return getService.getContractRiskAssessment(id);
+    public Mono<ResponseEntity<ContractRiskAssessmentDTO>> getContractRiskAssessmentById(@PathVariable Long id) {
+        return getService.getContractRiskAssessment(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     /**
      * List all risk assessments for a contract with pagination.
      *
-     * @param contractId The ID of the contract whose risk assessments are being fetched.
+     * @param contractId        The ID of the contract whose risk assessments are being fetched.
      * @param paginationRequest The pagination request containing page and size details.
      * @return Mono containing the paginated list of ContractRiskAssessmentDTOs.
      */
@@ -101,10 +105,12 @@ public class ContractRiskAssessmentController {
                     @ApiResponse(responseCode = "404", description = "No risk assessments found for the specified contract", content = @Content)
             }
     )
-    public Mono<PaginationResponse<ContractRiskAssessmentDTO>> getRiskAssessmentsForContract(
+    public Mono<ResponseEntity<PaginationResponse<ContractRiskAssessmentDTO>>> getRiskAssessmentsForContract(
             @PathVariable Long contractId,
             PaginationRequest paginationRequest) {
-        return getService.findByContractIdOrderByAssessmentDateDesc(contractId, paginationRequest);
+        return getService.findByContractIdOrderByAssessmentDateDesc(contractId, paginationRequest)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     /**
@@ -128,9 +134,11 @@ public class ContractRiskAssessmentController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractRiskAssessmentDTO> updateContractRiskAssessment(
+    public Mono<ResponseEntity<ContractRiskAssessmentDTO>> updateContractRiskAssessment(
             @PathVariable Long id, @RequestBody ContractRiskAssessmentDTO dto) {
-        return updateService.updateContractRiskAssessment(id, dto);
+        return updateService.updateContractRiskAssessment(id, dto)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     /**
@@ -149,7 +157,9 @@ public class ContractRiskAssessmentController {
                     @ApiResponse(responseCode = "404", description = "Contract risk assessment not found", content = @Content)
             }
     )
-    public Mono<Void> deleteContractRiskAssessment(@PathVariable Long id) {
-        return deleteService.deleteContractRiskAssessment(id);
+    public Mono<ResponseEntity<Void>> deleteContractRiskAssessment(@PathVariable Long id) {
+        return deleteService.deleteContractRiskAssessment(id)
+                .<ResponseEntity<Void>> map(deleted -> ResponseEntity.noContent().build())
+                .onErrorReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

@@ -12,9 +12,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -39,7 +39,7 @@ public class ContractTermController {
      * Create a new contract term.
      *
      * @param contractTermDTO The DTO containing the contract term's details.
-     * @return Mono of the created ContractTermDTO.
+     * @return ResponseEntity with created ContractTermDTO.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -55,15 +55,16 @@ public class ContractTermController {
                     @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content)
             }
     )
-    public Mono<ContractTermDTO> createContractTerm(@RequestBody ContractTermDTO contractTermDTO) {
-        return createService.createContractTerm(contractTermDTO);
+    public Mono<ResponseEntity<ContractTermDTO>> createContractTerm(@RequestBody ContractTermDTO contractTermDTO) {
+        return createService.createContractTerm(contractTermDTO)
+                .map(contractTerm -> ResponseEntity.status(HttpStatus.CREATED).body(contractTerm));
     }
 
     /**
      * Retrieve a contract term by its ID.
      *
      * @param id The unique identifier of the contract term.
-     * @return Mono of the requested ContractTermDTO.
+     * @return ResponseEntity with the requested ContractTermDTO.
      */
     @GetMapping("/{id}")
     @Operation(
@@ -78,16 +79,18 @@ public class ContractTermController {
                     @ApiResponse(responseCode = "404", description = "Contract term not found", content = @Content)
             }
     )
-    public Mono<ContractTermDTO> getContractTermById(@PathVariable Long id) {
-        return getService.getContractTerm(id);
+    public Mono<ResponseEntity<ContractTermDTO>> getContractTermById(@PathVariable Long id) {
+        return getService.getContractTerm(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * Retrieve all terms related to a specific contract, with pagination.
      *
-     * @param contractId The unique identifier of the contract.
+     * @param contractId        The unique identifier of the contract.
      * @param paginationRequest Contains pagination details like page number and size.
-     * @return Mono containing a paginated list of ContractTermDTOs.
+     * @return ResponseEntity containing a paginated list of ContractTermDTOs.
      */
     @GetMapping("/contract/{contractId}")
     @Operation(
@@ -102,17 +105,19 @@ public class ContractTermController {
                     @ApiResponse(responseCode = "404", description = "No terms found for the given contract", content = @Content)
             }
     )
-    public Mono<PaginationResponse<ContractTermDTO>> getTermsForContract(
+    public Mono<ResponseEntity<PaginationResponse<ContractTermDTO>>> getTermsForContract(
             @PathVariable Long contractId, PaginationRequest paginationRequest) {
-        return getService.findByContractId(contractId, paginationRequest);
+        return getService.findByContractId(contractId, paginationRequest)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * Update an existing contract term by its ID.
      *
-     * @param id  The unique identifier of the contract term to update.
+     * @param id              The unique identifier of the contract term to update.
      * @param contractTermDTO The updated contract term details.
-     * @return Mono of the updated ContractTermDTO.
+     * @return ResponseEntity with the updated ContractTermDTO.
      */
     @PutMapping("/{id}")
     @Operation(
@@ -128,16 +133,18 @@ public class ContractTermController {
                     @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content)
             }
     )
-    public Mono<ContractTermDTO> updateContractTerm(
+    public Mono<ResponseEntity<ContractTermDTO>> updateContractTerm(
             @PathVariable Long id, @RequestBody ContractTermDTO contractTermDTO) {
-        return updateService.updateContractTerm(id, contractTermDTO);
+        return updateService.updateContractTerm(id, contractTermDTO)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * Delete a contract term by its ID.
      *
      * @param id The unique identifier of the contract term to be deleted.
-     * @return Mono signaling the deletion completion.
+     * @return ResponseEntity signaling the deletion completion.
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -149,7 +156,9 @@ public class ContractTermController {
                     @ApiResponse(responseCode = "404", description = "Contract term not found", content = @Content)
             }
     )
-    public Mono<Void> deleteContractTerm(@PathVariable Long id) {
-        return deleteService.deleteContractTerm(id);
+    public Mono<ResponseEntity<Void>> deleteContractTerm(@PathVariable Long id) {
+        return deleteService.deleteContractTerm(id)
+                .<ResponseEntity<Void>> map(deleted -> ResponseEntity.noContent().<Void>build())
+                .onErrorReturn(ResponseEntity.notFound().build());
     }
 }

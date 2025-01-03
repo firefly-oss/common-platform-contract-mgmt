@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -34,12 +35,6 @@ public class ContractDocumentController {
     @Autowired
     private ContractDocumentDeleteService deleteService;
 
-    /**
-     * Create a new contract document.
-     *
-     * @param contractDocumentDTO The DTO containing the data to create a new contract document.
-     * @return Mono of the created ContractDocumentDTO.
-     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
@@ -54,16 +49,11 @@ public class ContractDocumentController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractDocumentDTO> createContractDocument(@RequestBody ContractDocumentDTO contractDocumentDTO) {
-        return createService.createContractDocument(contractDocumentDTO);
+    public Mono<ResponseEntity<ContractDocumentDTO>> createContractDocument(@RequestBody ContractDocumentDTO contractDocumentDTO) {
+        return createService.createContractDocument(contractDocumentDTO)
+                .map(document -> ResponseEntity.status(HttpStatus.CREATED).body(document));
     }
 
-    /**
-     * Get a contract document by its ID.
-     *
-     * @param id The unique identifier of the contract document.
-     * @return Mono of the requested ContractDocumentDTO.
-     */
     @GetMapping("/{id}")
     @Operation(
             summary = "Retrieve a contract document by ID",
@@ -77,17 +67,12 @@ public class ContractDocumentController {
                     @ApiResponse(responseCode = "404", description = "Contract document not found", content = @Content)
             }
     )
-    public Mono<ContractDocumentDTO> getContractDocumentById(@PathVariable Long id) {
-        return getService.getContractDocument(id);
+    public Mono<ResponseEntity<ContractDocumentDTO>> getContractDocumentById(@PathVariable Long id) {
+        return getService.getContractDocument(id)
+                .map(document -> ResponseEntity.ok(document))
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    /**
-     * Get contract documents by contract ID with pagination.
-     *
-     * @param contractId The unique identifier of the contract.
-     * @param paginationRequest The pagination details (page, size).
-     * @return Mono of a paginated response with a list of ContractDocumentDTOs.
-     */
     @GetMapping("/contract/{contractId}")
     @Operation(
             summary = "Retrieve contract documents by contract ID",
@@ -101,19 +86,14 @@ public class ContractDocumentController {
                     @ApiResponse(responseCode = "404", description = "No contract documents found", content = @Content)
             }
     )
-    public Mono<PaginationResponse<ContractDocumentDTO>> getDocumentsByContractId(
+    public Mono<ResponseEntity<PaginationResponse<ContractDocumentDTO>>> getDocumentsByContractId(
             @PathVariable Long contractId,
             PaginationRequest paginationRequest) {
-        return getService.findByContractId(contractId, paginationRequest);
+        return getService.findByContractId(contractId, paginationRequest)
+                .map(response -> ResponseEntity.ok(response))
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    /**
-     * Update a contract document by its ID.
-     *
-     * @param id The unique identifier of the contract document to be updated.
-     * @param contractDocumentDTO The updated details for the contract document.
-     * @return Mono of the updated ContractDocumentDTO.
-     */
     @PutMapping("/{id}")
     @Operation(
             summary = "Update a contract document",
@@ -128,17 +108,13 @@ public class ContractDocumentController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractDocumentDTO> updateContractDocument(@PathVariable Long id,
-                                                            @RequestBody ContractDocumentDTO contractDocumentDTO) {
-        return updateService.updateContractDocument(id, contractDocumentDTO);
+    public Mono<ResponseEntity<ContractDocumentDTO>> updateContractDocument(@PathVariable Long id,
+                                                                            @RequestBody ContractDocumentDTO contractDocumentDTO) {
+        return updateService.updateContractDocument(id, contractDocumentDTO)
+                .map(document -> ResponseEntity.ok(document))
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    /**
-     * Delete a contract document by its ID.
-     *
-     * @param id The unique identifier of the contract document to be deleted.
-     * @return Mono signaling deletion completion.
-     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
@@ -149,7 +125,9 @@ public class ContractDocumentController {
                     @ApiResponse(responseCode = "404", description = "Contract document not found", content = @Content)
             }
     )
-    public Mono<Void> deleteContractDocument(@PathVariable Long id) {
-        return deleteService.deleteContractDocument(id);
+    public Mono<ResponseEntity<Void>> deleteContractDocument(@PathVariable Long id) {
+        return deleteService.deleteContractDocument(id).<ResponseEntity<Void>>map(
+                deleted -> ResponseEntity.noContent().build())
+                .onErrorReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

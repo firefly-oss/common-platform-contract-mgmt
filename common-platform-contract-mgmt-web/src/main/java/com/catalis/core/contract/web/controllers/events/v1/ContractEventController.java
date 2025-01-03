@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -38,7 +39,7 @@ public class ContractEventController {
      * Create a new contract event.
      *
      * @param contractEventDTO The DTO containing the data to create the contract event.
-     * @return Mono of the created ContractEventDTO.
+     * @return Mono of the created ContractEventDTO wrapped in ResponseEntity.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -54,15 +55,16 @@ public class ContractEventController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractEventDTO> createContractEvent(@RequestBody ContractEventDTO contractEventDTO) {
-        return createService.createContractEvent(contractEventDTO);
+    public Mono<ResponseEntity<ContractEventDTO>> createContractEvent(@RequestBody ContractEventDTO contractEventDTO) {
+        return createService.createContractEvent(contractEventDTO)
+                .map(eventDTO -> ResponseEntity.status(HttpStatus.CREATED).body(eventDTO));
     }
 
     /**
      * Get a contract event by its ID.
      *
      * @param id The unique identifier of the contract event.
-     * @return Mono of the requested ContractEventDTO.
+     * @return Mono of the requested ContractEventDTO wrapped in ResponseEntity.
      */
     @GetMapping("/{id}")
     @Operation(
@@ -77,16 +79,18 @@ public class ContractEventController {
                     @ApiResponse(responseCode = "404", description = "Contract event not found", content = @Content)
             }
     )
-    public Mono<ContractEventDTO> getContractEventById(@PathVariable Long id) {
-        return getService.getContractEvent(id);
+    public Mono<ResponseEntity<ContractEventDTO>> getContractEventById(@PathVariable Long id) {
+        return getService.getContractEvent(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * Retrieve all events related to a contract, with pagination support.
      *
-     * @param contractId The ID of the contract whose events need to be retrieved.
+     * @param contractId        The ID of the contract whose events need to be retrieved.
      * @param paginationRequest Contains pagination information such as page size and number.
-     * @return Mono containing paginated results of contract events.
+     * @return Mono containing paginated results of contract events wrapped in ResponseEntity.
      */
     @GetMapping("/contract/{contractId}")
     @Operation(
@@ -101,18 +105,20 @@ public class ContractEventController {
                     @ApiResponse(responseCode = "404", description = "No contract events found for the specified contract ID", content = @Content)
             }
     )
-    public Mono<PaginationResponse<ContractEventDTO>> getContractEvents(
+    public Mono<ResponseEntity<PaginationResponse<ContractEventDTO>>> getContractEvents(
             @PathVariable Long contractId,
             PaginationRequest paginationRequest) {
-        return getService.findByContractIdOrderByEventDateDesc(contractId, paginationRequest);
+        return getService.findByContractIdOrderByEventDateDesc(contractId, paginationRequest)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * Update an existing contract event by its ID.
      *
-     * @param id The unique identifier of the contract event to be updated.
+     * @param id               The unique identifier of the contract event to be updated.
      * @param contractEventDTO The updated details of the contract event.
-     * @return Mono of the updated ContractEventDTO.
+     * @return Mono of the updated ContractEventDTO wrapped in ResponseEntity.
      */
     @PutMapping("/{id}")
     @Operation(
@@ -128,18 +134,19 @@ public class ContractEventController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractEventDTO> updateContractEvent(@PathVariable Long id, @RequestBody ContractEventDTO contractEventDTO) {
-        return updateService.updateContractEvent(id, contractEventDTO);
+    public Mono<ResponseEntity<ContractEventDTO>> updateContractEvent(@PathVariable Long id, @RequestBody ContractEventDTO contractEventDTO) {
+        return updateService.updateContractEvent(id, contractEventDTO)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * Delete a contract event by its ID.
      *
      * @param id The unique identifier of the contract event to be deleted.
-     * @return Mono signaling the deletion completion.
+     * @return Mono signaling the deletion completion wrapped in ResponseEntity.
      */
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "Delete a contract event",
             description = "Deletes the contract event associated with the specified ID.",
@@ -148,7 +155,9 @@ public class ContractEventController {
                     @ApiResponse(responseCode = "404", description = "Contract event not found", content = @Content)
             }
     )
-    public Mono<Void> deleteContractEvent(@PathVariable Long id) {
-        return deleteService.deleteContractEvent(id);
+    public Mono<ResponseEntity<Void>> deleteContractEvent(@PathVariable Long id) {
+        return deleteService.deleteContractEvent(id)
+                .<ResponseEntity<Void>> map(deleted -> ResponseEntity.noContent().<Void>build())
+                .onErrorReturn(ResponseEntity.notFound().build());
     }
 }

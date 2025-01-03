@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -34,14 +35,7 @@ public class ContractPartyController {
     @Autowired
     private ContractPartyDeleteService deleteService;
 
-    /**
-     * Create a new contract party.
-     *
-     * @param contractPartyDTO The DTO containing the data to create a new contract party.
-     * @return Mono of the created ContractPartyDTO.
-     */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Create a new contract party",
             description = "Creates a contract party with the provided information",
@@ -54,16 +48,11 @@ public class ContractPartyController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractPartyDTO> createContractParty(@RequestBody ContractPartyDTO contractPartyDTO) {
-        return createService.createContractParty(contractPartyDTO);
+    public Mono<ResponseEntity<ContractPartyDTO>> createContractParty(@RequestBody ContractPartyDTO contractPartyDTO) {
+        return createService.createContractParty(contractPartyDTO)
+                .map(created -> ResponseEntity.status(HttpStatus.CREATED).body(created));
     }
 
-    /**
-     * Get a contract party by its ID.
-     *
-     * @param id The unique identifier of the contract party.
-     * @return Mono of the requested ContractPartyDTO.
-     */
     @GetMapping("/{id}")
     @Operation(
             summary = "Retrieve a contract party by ID",
@@ -77,17 +66,12 @@ public class ContractPartyController {
                     @ApiResponse(responseCode = "404", description = "Contract party not found", content = @Content)
             }
     )
-    public Mono<ContractPartyDTO> getContractPartyById(@PathVariable Long id) {
-        return getService.getContractParty(id);
+    public Mono<ResponseEntity<ContractPartyDTO>> getContractPartyById(@PathVariable Long id) {
+        return getService.getContractParty(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Retrieve contract parties by contract ID with pagination.
-     *
-     * @param contractId The unique ID of the contract.
-     * @param paginationRequest The pagination request containing page size, number, etc.
-     * @return Mono of a paginated response containing a list of ContractPartyDTOs.
-     */
     @GetMapping("/contract/{contractId}")
     @Operation(
             summary = "Retrieve contract parties by contract ID",
@@ -101,19 +85,14 @@ public class ContractPartyController {
                     @ApiResponse(responseCode = "404", description = "No contract parties found for the given contract ID", content = @Content)
             }
     )
-    public Mono<PaginationResponse<ContractPartyDTO>> getContractPartiesByContractId(
+    public Mono<ResponseEntity<PaginationResponse<ContractPartyDTO>>> getContractPartiesByContractId(
             @PathVariable Long contractId,
             PaginationRequest paginationRequest) {
-        return getService.findByContractId(contractId, paginationRequest);
+        return getService.findByContractId(contractId, paginationRequest)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Update a contract party by its ID.
-     *
-     * @param id The unique identifier of the contract party to be updated.
-     * @param contractPartyDTO The updated details for the contract party.
-     * @return Mono of the updated ContractPartyDTO.
-     */
     @PutMapping("/{id}")
     @Operation(
             summary = "Update a contract party",
@@ -128,18 +107,13 @@ public class ContractPartyController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractPartyDTO> updateContractParty(@PathVariable Long id, @RequestBody ContractPartyDTO contractPartyDTO) {
-        return updateService.updateContractParty(id, contractPartyDTO);
+    public Mono<ResponseEntity<ContractPartyDTO>> updateContractParty(@PathVariable Long id, @RequestBody ContractPartyDTO contractPartyDTO) {
+        return updateService.updateContractParty(id, contractPartyDTO)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Delete a contract party by its ID.
-     *
-     * @param id The unique identifier of the contract party to delete.
-     * @return Mono signaling completion of deletion.
-     */
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "Delete a contract party by ID",
             description = "Deletes an existing contract party identified by its ID",
@@ -152,7 +126,9 @@ public class ContractPartyController {
                     @ApiResponse(responseCode = "404", description = "Contract party not found", content = @Content)
             }
     )
-    public Mono<Void> deleteContractParty(@PathVariable Long id) {
-        return deleteService.deleteContractParty(id);
+    public Mono<ResponseEntity<Void>> deleteContractParty(@PathVariable Long id) {
+        return deleteService.deleteContractParty(id)
+                .map(deleted -> ResponseEntity.noContent().<Void>build())
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }

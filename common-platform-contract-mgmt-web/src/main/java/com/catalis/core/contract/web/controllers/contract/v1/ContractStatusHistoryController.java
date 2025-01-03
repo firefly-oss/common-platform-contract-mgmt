@@ -2,7 +2,10 @@ package com.catalis.core.contract.web.controllers.contract.v1;
 
 import com.catalis.common.core.queries.PaginationRequest;
 import com.catalis.common.core.queries.PaginationResponse;
-import com.catalis.core.contract.core.services.contract.v1.*;
+import com.catalis.core.contract.core.services.contract.v1.ContractStatusHistoryCreateService;
+import com.catalis.core.contract.core.services.contract.v1.ContractStatusHistoryDeleteService;
+import com.catalis.core.contract.core.services.contract.v1.ContractStatusHistoryGetService;
+import com.catalis.core.contract.core.services.contract.v1.ContractStatusHistoryUpdateService;
 import com.catalis.core.contract.interfaces.dtos.contract.v1.ContractStatusHistoryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -31,14 +35,7 @@ public class ContractStatusHistoryController {
     @Autowired
     private ContractStatusHistoryDeleteService deleteService;
 
-    /**
-     * Create a new contract status history entry.
-     *
-     * @param dto The DTO containing the data to create a new entry.
-     * @return Mono of the created ContractStatusHistoryDTO.
-     */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Create a new contract status history entry",
             description = "Creates a contract status history entry for the provided data",
@@ -51,16 +48,11 @@ public class ContractStatusHistoryController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractStatusHistoryDTO> createContractStatusHistory(@RequestBody ContractStatusHistoryDTO dto) {
-        return createService.createContractStatusHistory(dto);
+    public Mono<ResponseEntity<ContractStatusHistoryDTO>> createContractStatusHistory(@RequestBody ContractStatusHistoryDTO dto) {
+        return createService.createContractStatusHistory(dto)
+                .map(createdDto -> ResponseEntity.status(HttpStatus.CREATED).body(createdDto));
     }
 
-    /**
-     * Get a contract status history entry by ID.
-     *
-     * @param id The unique identifier of the entry.
-     * @return Mono of the requested ContractStatusHistoryDTO.
-     */
     @GetMapping("/{id}")
     @Operation(
             summary = "Retrieve a contract status history entry by ID",
@@ -74,17 +66,12 @@ public class ContractStatusHistoryController {
                     @ApiResponse(responseCode = "404", description = "Contract status history entry not found", content = @Content)
             }
     )
-    public Mono<ContractStatusHistoryDTO> getContractStatusHistoryById(@PathVariable Long id) {
-        return getService.getContractStatusHistory(id);
+    public Mono<ResponseEntity<ContractStatusHistoryDTO>> getContractStatusHistoryById(@PathVariable Long id) {
+        return getService.getContractStatusHistory(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Retrieve all status history entries for a contract with pagination.
-     *
-     * @param contractId        The ID of the contract whose history is being retrieved.
-     * @param paginationRequest The pagination details (page, size, etc.).
-     * @return Mono containing paginated results of contract status history entries.
-     */
     @GetMapping("/contract/{contractId}")
     @Operation(
             summary = "Retrieve all status history entries for a contract",
@@ -98,18 +85,13 @@ public class ContractStatusHistoryController {
                     @ApiResponse(responseCode = "404", description = "No entries found for the specified contract", content = @Content)
             }
     )
-    public Mono<PaginationResponse<ContractStatusHistoryDTO>> getStatusHistoryForContract(
+    public Mono<ResponseEntity<PaginationResponse<ContractStatusHistoryDTO>>> getStatusHistoryForContract(
             @PathVariable Long contractId, PaginationRequest paginationRequest) {
-        return getService.findByContractIdOrderByStatusStartDateDesc(contractId, paginationRequest);
+        return getService.findByContractIdOrderByStatusStartDateDesc(contractId, paginationRequest)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Update an existing contract status history entry by ID.
-     *
-     * @param id  The unique identifier of the entry to be updated.
-     * @param dto The updated details of the entry.
-     * @return Mono of the updated ContractStatusHistoryDTO.
-     */
     @PutMapping("/{id}")
     @Operation(
             summary = "Update a contract status history entry",
@@ -124,18 +106,13 @@ public class ContractStatusHistoryController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractStatusHistoryDTO> updateContractStatusHistory(@PathVariable Long id, @RequestBody ContractStatusHistoryDTO dto) {
-        return updateService.updateContractStatusHistory(id, dto);
+    public Mono<ResponseEntity<ContractStatusHistoryDTO>> updateContractStatusHistory(@PathVariable Long id, @RequestBody ContractStatusHistoryDTO dto) {
+        return updateService.updateContractStatusHistory(id, dto)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Delete a contract status history entry by ID.
-     *
-     * @param id The unique identifier of the entry to delete.
-     * @return Mono signaling the deletion completion.
-     */
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "Delete a contract status history entry by ID",
             description = "Deletes an existing contract status history entry identified by its ID",
@@ -144,7 +121,9 @@ public class ContractStatusHistoryController {
                     @ApiResponse(responseCode = "404", description = "Contract status history entry not found", content = @Content)
             }
     )
-    public Mono<Void> deleteContractStatusHistory(@PathVariable Long id) {
-        return deleteService.deleteContractStatusHistory(id);
+    public Mono<ResponseEntity<Void>> deleteContractStatusHistory(@PathVariable Long id) {
+        return deleteService.deleteContractStatusHistory(id)
+                .<ResponseEntity<Void>>map(deleted -> ResponseEntity.noContent().<Void>build())
+                .onErrorReturn(ResponseEntity.notFound().build());
     }
 }

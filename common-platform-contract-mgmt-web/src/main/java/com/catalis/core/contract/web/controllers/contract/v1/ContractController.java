@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -24,13 +25,13 @@ public class ContractController {
 
     @Autowired
     private ContractCreateService createService;
-    
+
     @Autowired
     private ContractUpdateService updateService;
-    
+
     @Autowired
     private ContractGetService getService;
-    
+
     @Autowired
     private ContractDeleteService deleteService;
 
@@ -54,8 +55,9 @@ public class ContractController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractDTO> createContract(@RequestBody ContractDTO contractDTO) {
-        return createService.createContract(contractDTO);
+    public Mono<ResponseEntity<ContractDTO>> createContract(@RequestBody ContractDTO contractDTO) {
+        return createService.createContract(contractDTO)
+                .map(createdContract -> ResponseEntity.status(HttpStatus.CREATED).body(createdContract));
     }
 
     /**
@@ -79,8 +81,9 @@ public class ContractController {
                     @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
             }
     )
-    public Mono<ContractDTO> updateContract(@PathVariable Long id, @RequestBody ContractDTO contractDTO) {
-        return updateService.updateContract(id, contractDTO);
+    public Mono<ResponseEntity<ContractDTO>> updateContract(@PathVariable Long id, @RequestBody ContractDTO contractDTO) {
+        return updateService.updateContract(id, contractDTO)
+                .map(updatedContract -> ResponseEntity.ok(updatedContract));
     }
 
     /**
@@ -102,8 +105,10 @@ public class ContractController {
                     @ApiResponse(responseCode = "404", description = "Contract not found", content = @Content)
             }
     )
-    public Mono<ContractDTO> getContractById(@PathVariable Long id) {
-        return getService.getContract(id);
+    public Mono<ResponseEntity<ContractDTO>> getContractById(@PathVariable Long id) {
+        return getService.getContract(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
@@ -125,15 +130,17 @@ public class ContractController {
                     @ApiResponse(responseCode = "404", description = "Contract not found", content = @Content)
             }
     )
-    public Mono<ContractDTO> getContractByContractNumber(@PathVariable String contractNumber) {
-        return getService.getContractByContractNumber(contractNumber);
+    public Mono<ResponseEntity<ContractDTO>> getContractByContractNumber(@PathVariable String contractNumber) {
+        return getService.getContractByContractNumber(contractNumber)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * Get Contracts by Product ID with Pagination.
      *
-     * @param productId          the product ID
-     * @param paginationRequest  the pagination request
+     * @param productId         the product ID
+     * @param paginationRequest the pagination request
      * @return Mono emitting the paginated response of contracts
      */
     @GetMapping("/product/{productId}")
@@ -149,10 +156,12 @@ public class ContractController {
                     @ApiResponse(responseCode = "404", description = "No contracts found", content = @Content)
             }
     )
-    public Mono<PaginationResponse<ContractDTO>> findByProductId(
+    public Mono<ResponseEntity<PaginationResponse<ContractDTO>>> findByProductId(
             @PathVariable Long productId,
             PaginationRequest paginationRequest) {
-        return getService.findByProductId(productId, paginationRequest);
+        return getService.findByProductId(productId, paginationRequest)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
@@ -176,7 +185,9 @@ public class ContractController {
                     @ApiResponse(responseCode = "400", description = "Deletion failed", content = @Content)
             }
     )
-    public Mono<Void> deleteContract(@PathVariable Long id) {
-        return deleteService.deleteContract(id);
+    public Mono<ResponseEntity<Void>> deleteContract(@PathVariable Long id) {
+        return deleteService.deleteContract(id)
+                .<ResponseEntity<Void>>map(response -> ResponseEntity.ok().build())
+                .onErrorReturn(ResponseEntity.badRequest().build());
     }
 }
