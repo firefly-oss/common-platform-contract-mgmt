@@ -10,23 +10,6 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 
 public interface ContractTermRepository extends BaseRepository<ContractTerm, Long> {
-
     Flux<ContractTerm> findByContractId(Long contractId, Pageable pageable);
     Mono<Long> countByContractId(Long contractId);
-
-    Flux<ContractTerm> findByTermType(TermTypeEnum termType, Pageable pageable);
-
-    Flux<ContractTerm> findByContractIdAndEffectiveDateLessThanEqualAndExpirationDateGreaterThanEqual(
-            Long contractId,
-            LocalDateTime effectiveDate,
-            LocalDateTime expirationDate,
-            Pageable pageable
-    );
-
-    Flux<ContractTerm> findByContractIdAndEffectiveDateLessThanEqualAndExpirationDateIsNull(
-            Long contractId,
-            LocalDateTime effectiveDate,
-            Pageable pageable
-    );
-
 }

@@ -10,19 +10,7 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 
 public interface ContractStatusHistoryRepository extends BaseRepository<ContractStatusHistory, Long> {
-
-    Flux<ContractStatusHistory> findByContractIdOrderByStatusStartDateDesc(Long contractId, Pageable pageable);
+    Flux<ContractStatusHistory> findByContractId(Long contractId);
+    Flux<ContractStatusHistory> findByContractId(Long contractId, Pageable pageable);
     Mono<Long> countByContractId(Long contractId);
-
-    Flux<ContractStatusHistory> findByStatusCode(StatusCodeEnum statusCode, Pageable pageable);
-
-    Flux<ContractStatusHistory> findByContractIdAndStatusStartDateGreaterThan(
-            Long contractId,
-            LocalDateTime startDate,
-            Pageable pageable
-    );
-
-    Mono<ContractStatusHistory> findFirstByContractIdOrderByStatusStartDateDesc(Long contractId);
-
-
 }

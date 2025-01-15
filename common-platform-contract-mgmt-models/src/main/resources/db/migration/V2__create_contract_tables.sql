@@ -13,9 +13,6 @@ CREATE TABLE contract (
                           date_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_contract_product_id ON contract(product_id);
-CREATE INDEX idx_contract_status ON contract(contract_status);
-
 -- Contract Party Table
 CREATE TABLE contract_party (
                                 contract_party_id BIGSERIAL PRIMARY KEY,
@@ -32,9 +29,6 @@ CREATE TABLE contract_party (
                                         REFERENCES contract(contract_id)
 );
 
-CREATE INDEX idx_contract_party_contract ON contract_party(contract_id);
-CREATE INDEX idx_contract_party_party ON contract_party(party_id);
-
 -- Contract Document Table
 CREATE TABLE contract_document (
                                    contract_document_id BIGSERIAL PRIMARY KEY,
@@ -48,8 +42,6 @@ CREATE TABLE contract_document (
                                        FOREIGN KEY (contract_id)
                                            REFERENCES contract(contract_id)
 );
-
-CREATE INDEX idx_contract_document_contract ON contract_document(contract_id);
 
 -- Contract Status History Table
 CREATE TABLE contract_status_history (
@@ -65,7 +57,6 @@ CREATE TABLE contract_status_history (
                                                  REFERENCES contract(contract_id)
 );
 
-CREATE INDEX idx_status_history_contract ON contract_status_history(contract_id);
 
 -- Contract Term Table
 CREATE TABLE contract_term (
@@ -84,9 +75,6 @@ CREATE TABLE contract_term (
                                        REFERENCES contract(contract_id)
 );
 
-CREATE INDEX idx_contract_term_contract ON contract_term(contract_id);
-CREATE INDEX idx_contract_term_type ON contract_term(term_type);
-
 -- Contract Event Table
 CREATE TABLE contract_event (
                                 contract_event_id BIGSERIAL PRIMARY KEY,
@@ -101,9 +89,6 @@ CREATE TABLE contract_event (
                                     FOREIGN KEY (contract_id)
                                         REFERENCES contract(contract_id)
 );
-
-CREATE INDEX idx_contract_event_contract ON contract_event(contract_id);
-CREATE INDEX idx_contract_event_type ON contract_event(event_type);
 
 -- Contract Risk Assessment Table
 CREATE TABLE contract_risk_assessment (
@@ -120,6 +105,3 @@ CREATE TABLE contract_risk_assessment (
                                               FOREIGN KEY (contract_id)
                                                   REFERENCES contract(contract_id)
 );
-
-CREATE INDEX idx_risk_assessment_contract ON contract_risk_assessment(contract_id);
-CREATE INDEX idx_risk_assessment_level ON contract_risk_assessment(risk_level);

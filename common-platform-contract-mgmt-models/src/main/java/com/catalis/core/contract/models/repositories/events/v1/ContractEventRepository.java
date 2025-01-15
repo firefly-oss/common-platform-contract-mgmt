@@ -10,18 +10,6 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 
 public interface ContractEventRepository extends BaseRepository<ContractEvent, Long> {
-
-    Flux<ContractEvent> findByContractIdOrderByEventDateDesc(Long contractId, Pageable pageable);
+    Flux<ContractEvent> findByContractId(Long contractId, Pageable pageable);
     Mono<Long> countByContractId(Long contractId);
-
-    Flux<ContractEvent> findByEventType(EventTypeEnum eventType, Pageable pageable);
-
-    Flux<ContractEvent> findByEventDateBetween(
-            LocalDateTime startDate,
-            LocalDateTime endDate,
-            Pageable pageable
-    );
-
-    Mono<ContractEvent> findFirstByContractIdOrderByEventDateDesc(Long contractId);
-
 }
