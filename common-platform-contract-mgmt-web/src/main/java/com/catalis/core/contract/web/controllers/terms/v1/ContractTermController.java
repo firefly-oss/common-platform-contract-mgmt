@@ -2,163 +2,146 @@ package com.catalis.core.contract.web.controllers.terms.v1;
 
 import com.catalis.common.core.queries.PaginationRequest;
 import com.catalis.common.core.queries.PaginationResponse;
-import com.catalis.core.contract.core.services.terms.v1.ContractTermCreateService;
-import com.catalis.core.contract.core.services.terms.v1.ContractTermDeleteService;
-import com.catalis.core.contract.core.services.terms.v1.ContractTermGetService;
-import com.catalis.core.contract.core.services.terms.v1.ContractTermUpdateService;
+import com.catalis.core.contract.core.services.terms.v1.ContractTermServiceImpl;
 import com.catalis.core.contract.interfaces.dtos.terms.v1.ContractTermDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+@Tag(name = "Contract Terms", description = "APIs for managing terms of a contract")
 @RestController
-@RequestMapping("/api/v1/contracts-terms")
-@Tag(name = "Contract Term API", description = "Endpoints to efficiently create, retrieve, update, and delete contract terms, including support for contract-specific querying and pagination.")
+@RequestMapping("/api/v1/contracts/{contractId}/terms")
 public class ContractTermController {
 
     @Autowired
-    private ContractTermCreateService createService;
+    private ContractTermServiceImpl service;
 
-    @Autowired
-    private ContractTermGetService getService;
-
-    @Autowired
-    private ContractTermUpdateService updateService;
-
-    @Autowired
-    private ContractTermDeleteService deleteService;
-
-    /**
-     * Create a new contract term.
-     *
-     * @param contractTermDTO The DTO containing the contract term's details.
-     * @return ResponseEntity with created ContractTermDTO.
-     */
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            summary = "Create a new contract term",
-            description = "Creates a new contract term based on the provided details.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Successfully created the contract term.",
-                            content = @Content(schema = @Schema(implementation = ContractTermDTO.class))
-                    ),
-                    @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content)
-            }
+            summary = "Retrieve Contract Terms",
+            description = "Retrieves a paginated list of terms for the specified contract."
     )
-    public Mono<ResponseEntity<ContractTermDTO>> createContractTerm(@RequestBody ContractTermDTO contractTermDTO) {
-        return createService.createContractTerm(contractTermDTO)
-                .map(contractTerm -> ResponseEntity.status(HttpStatus.CREATED).body(contractTerm));
-    }
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved contract terms",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = PaginationResponse.class))),
+            @ApiResponse(responseCode = "404", description = "No terms found for the specified contract",
+                    content = @Content)
+    })
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<PaginationResponse<ContractTermDTO>>> getAllTerms(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
 
-    /**
-     * Retrieve a contract term by its ID.
-     *
-     * @param id The unique identifier of the contract term.
-     * @return ResponseEntity with the requested ContractTermDTO.
-     */
-    @GetMapping("/{id}")
-    @Operation(
-            summary = "Retrieve a contract term by ID",
-            description = "Fetches the contract term associated with the specified ID.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Successfully retrieved the contract term.",
-                            content = @Content(schema = @Schema(implementation = ContractTermDTO.class))
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Contract term not found", content = @Content)
-            }
-    )
-    public Mono<ResponseEntity<ContractTermDTO>> getContractTermById(@PathVariable Long id) {
-        return getService.getContractTerm(id)
+            @ParameterObject
+            @ModelAttribute PaginationRequest paginationRequest
+    ) {
+        return service.getAllTerms(contractId, paginationRequest)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Retrieve all terms related to a specific contract, with pagination.
-     *
-     * @param contractId        The unique identifier of the contract.
-     * @param paginationRequest Contains pagination details like page number and size.
-     * @return ResponseEntity containing a paginated list of ContractTermDTOs.
-     */
-    @GetMapping("/contract/{contractId}")
     @Operation(
-            summary = "Retrieve all contract terms for a specific contract",
-            description = "Fetches all terms associated with a specific contract ID with pagination support.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Successfully retrieved the list of contract terms.",
-                            content = @Content(schema = @Schema(implementation = PaginationResponse.class))
-                    ),
-                    @ApiResponse(responseCode = "404", description = "No terms found for the given contract", content = @Content)
-            }
+            summary = "Create Contract Term",
+            description = "Creates a new term for the specified contract."
     )
-    public Mono<ResponseEntity<PaginationResponse<ContractTermDTO>>> getTermsForContract(
-            @PathVariable Long contractId, PaginationRequest paginationRequest) {
-        return getService.findByContractId(contractId, paginationRequest)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Term created successfully",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ContractTermDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid term data provided", content = @Content)
+    })
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<ContractTermDTO>> createTerm(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
+
+            @Parameter(description = "Term data to be created", required = true,
+                    schema = @Schema(implementation = ContractTermDTO.class))
+            @RequestBody ContractTermDTO dto
+    ) {
+        return service.createTerm(contractId, dto)
+                .map(createdTerm -> ResponseEntity.status(HttpStatus.CREATED).body(createdTerm))
+                .defaultIfEmpty(ResponseEntity.badRequest().build());
+    }
+
+    @Operation(
+            summary = "Get Contract Term",
+            description = "Retrieve a specific contract term by its unique identifier."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the contract term",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ContractTermDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Contract term not found", content = @Content)
+    })
+    @GetMapping(value = "/{termId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<ContractTermDTO>> getTerm(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
+
+            @Parameter(description = "Unique identifier of the term", required = true)
+            @PathVariable Long termId
+    ) {
+        return service.getTerm(contractId, termId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Update an existing contract term by its ID.
-     *
-     * @param id              The unique identifier of the contract term to update.
-     * @param contractTermDTO The updated contract term details.
-     * @return ResponseEntity with the updated ContractTermDTO.
-     */
-    @PutMapping("/{id}")
     @Operation(
-            summary = "Update a contract term",
-            description = "Updates the details of an existing contract term by its ID.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Successfully updated the contract term.",
-                            content = @Content(schema = @Schema(implementation = ContractTermDTO.class))
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Contract term not found", content = @Content),
-                    @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content)
-            }
+            summary = "Update Contract Term",
+            description = "Update an existing contract term by its unique identifier."
     )
-    public Mono<ResponseEntity<ContractTermDTO>> updateContractTerm(
-            @PathVariable Long id, @RequestBody ContractTermDTO contractTermDTO) {
-        return updateService.updateContractTerm(id, contractTermDTO)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Contract term updated successfully",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ContractTermDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Contract term not found", content = @Content)
+    })
+    @PutMapping(value = "/{termId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<ContractTermDTO>> updateTerm(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
+
+            @Parameter(description = "Unique identifier of the term to update", required = true)
+            @PathVariable Long termId,
+
+            @Parameter(description = "Updated contract term data", required = true,
+                    schema = @Schema(implementation = ContractTermDTO.class))
+            @RequestBody ContractTermDTO dto
+    ) {
+        return service.updateTerm(contractId, termId, dto)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Delete a contract term by its ID.
-     *
-     * @param id The unique identifier of the contract term to be deleted.
-     * @return ResponseEntity signaling the deletion completion.
-     */
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
-            summary = "Delete a contract term",
-            description = "Deletes the contract term associated with the specified ID.",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Successfully deleted the contract term.", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "Contract term not found", content = @Content)
-            }
+            summary = "Delete Contract Term",
+            description = "Remove an existing term from the contract by its unique identifier."
     )
-    public Mono<ResponseEntity<Void>> deleteContractTerm(@PathVariable Long id) {
-        return deleteService.deleteContractTerm(id)
-                .<ResponseEntity<Void>> map(deleted -> ResponseEntity.noContent().<Void>build())
-                .onErrorReturn(ResponseEntity.notFound().build());
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Term deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Contract term not found", content = @Content)
+    })
+    @DeleteMapping("/{termId}")
+    public Mono<ResponseEntity<Void>> deleteTerm(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
+
+            @Parameter(description = "Unique identifier of the term to delete", required = true)
+            @PathVariable Long termId
+    ) {
+        return service.deleteTerm(contractId, termId)
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }

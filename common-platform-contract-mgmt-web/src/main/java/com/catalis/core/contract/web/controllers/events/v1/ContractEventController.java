@@ -2,162 +2,144 @@ package com.catalis.core.contract.web.controllers.events.v1;
 
 import com.catalis.common.core.queries.PaginationRequest;
 import com.catalis.common.core.queries.PaginationResponse;
-import com.catalis.core.contract.core.services.events.v1.ContractEventCreateService;
-import com.catalis.core.contract.core.services.events.v1.ContractEventDeleteService;
-import com.catalis.core.contract.core.services.events.v1.ContractEventGetService;
-import com.catalis.core.contract.core.services.events.v1.ContractEventUpdateService;
+import com.catalis.core.contract.core.services.events.v1.ContractEventServiceImpl;
 import com.catalis.core.contract.interfaces.dtos.events.v1.ContractEventDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+@Tag(name = "Contract Events", description = "APIs for managing contract events")
 @RestController
-@RequestMapping("/api/v1/contracts-events")
-@Tag(name = "Contract Event API", description = "API for creating, retrieving, updating, and deleting contract events with support for pagination and detailed event management.")
+@RequestMapping("/api/v1/contracts/{contractId}/events")
 public class ContractEventController {
 
     @Autowired
-    private ContractEventCreateService createService;
+    private ContractEventServiceImpl service;
 
-    @Autowired
-    private ContractEventGetService getService;
-
-    @Autowired
-    private ContractEventUpdateService updateService;
-
-    @Autowired
-    private ContractEventDeleteService deleteService;
-
-    /**
-     * Create a new contract event.
-     *
-     * @param contractEventDTO The DTO containing the data to create the contract event.
-     * @return Mono of the created ContractEventDTO wrapped in ResponseEntity.
-     */
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            summary = "Create a new contract event",
-            description = "Creates a new contract event based on the provided details.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Successfully created the contract event.",
-                            content = @Content(schema = @Schema(implementation = ContractEventDTO.class))
-                    ),
-                    @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
-            }
+            summary = "Retrieve Contract Events",
+            description = "Retrieves a paginated list of events for the specified contract."
     )
-    public Mono<ResponseEntity<ContractEventDTO>> createContractEvent(@RequestBody ContractEventDTO contractEventDTO) {
-        return createService.createContractEvent(contractEventDTO)
-                .map(eventDTO -> ResponseEntity.status(HttpStatus.CREATED).body(eventDTO));
-    }
-
-    /**
-     * Get a contract event by its ID.
-     *
-     * @param id The unique identifier of the contract event.
-     * @return Mono of the requested ContractEventDTO wrapped in ResponseEntity.
-     */
-    @GetMapping("/{id}")
-    @Operation(
-            summary = "Retrieve a contract event by ID",
-            description = "Fetches the contract event associated with the specified ID.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Successfully retrieved the contract event.",
-                            content = @Content(schema = @Schema(implementation = ContractEventDTO.class))
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Contract event not found", content = @Content)
-            }
-    )
-    public Mono<ResponseEntity<ContractEventDTO>> getContractEventById(@PathVariable Long id) {
-        return getService.getContractEvent(id)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Retrieve all events related to a contract, with pagination support.
-     *
-     * @param contractId        The ID of the contract whose events need to be retrieved.
-     * @param paginationRequest Contains pagination information such as page size and number.
-     * @return Mono containing paginated results of contract events wrapped in ResponseEntity.
-     */
-    @GetMapping("/contract/{contractId}")
-    @Operation(
-            summary = "Retrieve contract events by contract ID",
-            description = "Fetches all contract events associated with a specific contract ID, with pagination support.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Successfully retrieved the list of contract events.",
-                            content = @Content(schema = @Schema(implementation = PaginationResponse.class))
-                    ),
-                    @ApiResponse(responseCode = "404", description = "No contract events found for the specified contract ID", content = @Content)
-            }
-    )
-    public Mono<ResponseEntity<PaginationResponse<ContractEventDTO>>> getContractEvents(
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved contract events",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = PaginationResponse.class))),
+            @ApiResponse(responseCode = "404", description = "No events found", content = @Content)
+    })
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<PaginationResponse<ContractEventDTO>>> getAllEvents(
+            @Parameter(description = "Unique identifier of the contract", required = true)
             @PathVariable Long contractId,
-            PaginationRequest paginationRequest) {
-        return getService.findByContractIdOrderByEventDateDesc(contractId, paginationRequest)
+
+            @ParameterObject
+            @ModelAttribute PaginationRequest paginationRequest
+    ) {
+        return service.getAllEvents(contractId, paginationRequest)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Update an existing contract event by its ID.
-     *
-     * @param id               The unique identifier of the contract event to be updated.
-     * @param contractEventDTO The updated details of the contract event.
-     * @return Mono of the updated ContractEventDTO wrapped in ResponseEntity.
-     */
-    @PutMapping("/{id}")
     @Operation(
-            summary = "Update a contract event",
-            description = "Updates the details of an existing contract event identified by its ID.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Successfully updated the contract event.",
-                            content = @Content(schema = @Schema(implementation = ContractEventDTO.class))
-                    ),
-                    @ApiResponse(responseCode = "404", description = "Contract event not found", content = @Content),
-                    @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
-            }
+            summary = "Create Contract Event",
+            description = "Create a new event record for the specified contract."
     )
-    public Mono<ResponseEntity<ContractEventDTO>> updateContractEvent(@PathVariable Long id, @RequestBody ContractEventDTO contractEventDTO) {
-        return updateService.updateContractEvent(id, contractEventDTO)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Event created successfully",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ContractEventDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid event data provided", content = @Content)
+    })
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<ContractEventDTO>> createEvent(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
+
+            @Parameter(description = "Event data to be created", required = true,
+                    schema = @Schema(implementation = ContractEventDTO.class))
+            @RequestBody ContractEventDTO dto
+    ) {
+        return service.createEvent(contractId, dto)
+                .map(createdEvent -> ResponseEntity.status(201).body(createdEvent))
+                .defaultIfEmpty(ResponseEntity.badRequest().build());
+    }
+
+    @Operation(
+            summary = "Get Contract Event",
+            description = "Retrieve a specific event for the specified contract by event ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the event",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ContractEventDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
+    })
+    @GetMapping(value = "/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<ContractEventDTO>> getEvent(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
+
+            @Parameter(description = "Unique identifier of the event", required = true)
+            @PathVariable Long eventId
+    ) {
+        return service.getEvent(contractId, eventId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Delete a contract event by its ID.
-     *
-     * @param id The unique identifier of the contract event to be deleted.
-     * @return Mono signaling the deletion completion wrapped in ResponseEntity.
-     */
-    @DeleteMapping("/{id}")
     @Operation(
-            summary = "Delete a contract event",
-            description = "Deletes the contract event associated with the specified ID.",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Successfully deleted the contract event.", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "Contract event not found", content = @Content)
-            }
+            summary = "Update Contract Event",
+            description = "Update an existing event by its unique identifier."
     )
-    public Mono<ResponseEntity<Void>> deleteContractEvent(@PathVariable Long id) {
-        return deleteService.deleteContractEvent(id)
-                .<ResponseEntity<Void>> map(deleted -> ResponseEntity.noContent().<Void>build())
-                .onErrorReturn(ResponseEntity.notFound().build());
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Event updated successfully",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ContractEventDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
+    })
+    @PutMapping(value = "/{eventId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<ContractEventDTO>> updateEvent(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
+
+            @Parameter(description = "Unique identifier of the event to update", required = true)
+            @PathVariable Long eventId,
+
+            @Parameter(description = "Updated event data", required = true,
+                    schema = @Schema(implementation = ContractEventDTO.class))
+            @RequestBody ContractEventDTO dto
+    ) {
+        return service.updateEvent(contractId, eventId, dto)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @Operation(
+            summary = "Delete Contract Event",
+            description = "Remove an existing event record from the contract by its unique identifier."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Event deleted successfully", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
+    })
+    @DeleteMapping("/{eventId}")
+    public Mono<ResponseEntity<Void>> deleteEvent(
+            @Parameter(description = "Unique identifier of the contract", required = true)
+            @PathVariable Long contractId,
+
+            @Parameter(description = "Unique identifier of the event to delete", required = true)
+            @PathVariable Long eventId
+    ) {
+        return service.deleteEvent(contractId, eventId)
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }
