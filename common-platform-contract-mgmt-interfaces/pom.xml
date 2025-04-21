@@ -18,6 +18,20 @@
     </properties>
 
     <dependencies>
+        <!-- Internal -->
+        <dependency>
+            <groupId>com.catalis</groupId>
+            <artifactId>lib-common-r2dbc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Internal -->
+        <dependency>
+            <groupId>com.catalis</groupId>
+            <artifactId>lib-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
