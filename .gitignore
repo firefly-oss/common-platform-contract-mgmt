@@ -24,12 +24,10 @@ hs_err_pid*
 replay_pid*
 
 
-# IntelliJ IDEA files
+# IntelliJ IDEA specific files
 .idea/
 *.iml
 *.iws
-out/
 
-# Gradle build output
-build/
-.target/
+# Target folder
+target/

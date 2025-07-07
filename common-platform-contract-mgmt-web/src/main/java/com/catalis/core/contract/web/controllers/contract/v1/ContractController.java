@@ -32,15 +32,12 @@ public class ContractController {
             description = "Apply filters to retrieve a paginated list of contracts."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered contracts",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PaginationResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered contracts"),
             @ApiResponse(responseCode = "404", description = "No results found", content = @Content)
     })
-    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/filter", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<PaginationResponse<ContractDTO>>> filterContracts(
-            @ParameterObject
-            @ModelAttribute FilterRequest<ContractDTO> filterRequest
+            @RequestBody FilterRequest<ContractDTO> filterRequest
     ) {
         return service.filterContracts(filterRequest)
                 .map(ResponseEntity::ok)

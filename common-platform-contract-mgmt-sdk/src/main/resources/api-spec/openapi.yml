@@ -1,0 +1,1754 @@
+openapi: 3.0.1
+info:
+  title: common-platform-contract-mgmt
+  description: Contract Management Core Application
+  contact:
+    name: Catalis Development
+    email: dev@catalis.com
+  version: 1.0.0
+servers:
+  - url: 'http://core.catalis.vc/contracts'
+    description: Development Environment
+  - url: /
+    description: Local Development Environment
+tags:
+  - name: Contract Events
+    description: APIs for managing contract events
+  - name: Contracts
+    description: APIs for managing contract records
+  - name: Contract Risk Assessments
+    description: APIs for managing contract risk assessments
+  - name: Contract Parties
+    description: APIs for managing parties linked to a contract
+  - name: Contract Documents
+    description: APIs for managing contract documents
+  - name: Contract Status History
+    description: APIs for managing contract status changes over time
+  - name: Contract Terms
+    description: APIs for managing terms of a contract
+paths:
+  '/api/v1/contracts/{contractId}/terms/{termId}':
+    get:
+      tags:
+        - Contract Terms
+      summary: Get Contract Term
+      description: Retrieve a specific contract term by its unique identifier.
+      operationId: getTerm
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: termId
+          in: path
+          description: Unique identifier of the term
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully retrieved the contract term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractTermDTO'
+        '404':
+          description: Contract term not found
+    put:
+      tags:
+        - Contract Terms
+      summary: Update Contract Term
+      description: Update an existing contract term by its unique identifier.
+      operationId: updateTerm
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: termId
+          in: path
+          description: Unique identifier of the term to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractTermDTO'
+        required: true
+      responses:
+        '200':
+          description: Contract term updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractTermDTO'
+        '404':
+          description: Contract term not found
+    delete:
+      tags:
+        - Contract Terms
+      summary: Delete Contract Term
+      description: Remove an existing term from the contract by its unique identifier.
+      operationId: deleteTerm
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: termId
+          in: path
+          description: Unique identifier of the term to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Term deleted successfully
+        '404':
+          description: Contract term not found
+  '/api/v1/contracts/{contractId}/status-history/{historyId}':
+    get:
+      tags:
+        - Contract Status History
+      summary: Get Contract Status History
+      description: Retrieve a specific status history record by its unique identifier.
+      operationId: getStatusHistory
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: historyId
+          in: path
+          description: Unique identifier of the history record
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully retrieved the status history record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractStatusHistoryDTO'
+        '404':
+          description: Status history record not found
+    put:
+      tags:
+        - Contract Status History
+      summary: Update Contract Status History
+      description: Update an existing status history record by its unique identifier.
+      operationId: updateStatusHistory
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: historyId
+          in: path
+          description: Unique identifier of the history record to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractStatusHistoryDTO'
+        required: true
+      responses:
+        '200':
+          description: Status history record updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractStatusHistoryDTO'
+        '404':
+          description: Status history record not found
+    delete:
+      tags:
+        - Contract Status History
+      summary: Delete Contract Status History
+      description: >-
+        Remove an existing status history record from the contract by its unique
+        identifier.
+      operationId: deleteStatusHistory
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: historyId
+          in: path
+          description: Unique identifier of the history record to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Status history record deleted successfully
+        '404':
+          description: Status history record not found
+  '/api/v1/contracts/{contractId}/risk-assessments/{riskId}':
+    get:
+      tags:
+        - Contract Risk Assessments
+      summary: Get Contract Risk Assessment
+      description: Retrieve a specific risk assessment linked to the contract by risk ID.
+      operationId: getRiskAssessment
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: riskId
+          in: path
+          description: Unique identifier of the risk assessment
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully retrieved the risk assessment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractRiskAssessmentDTO'
+        '404':
+          description: Risk assessment not found
+    put:
+      tags:
+        - Contract Risk Assessments
+      summary: Update Contract Risk Assessment
+      description: Update an existing risk assessment by its unique identifier.
+      operationId: updateRiskAssessment
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: riskId
+          in: path
+          description: Unique identifier of the risk assessment to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractRiskAssessmentDTO'
+        required: true
+      responses:
+        '200':
+          description: Risk assessment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractRiskAssessmentDTO'
+        '404':
+          description: Risk assessment not found
+    delete:
+      tags:
+        - Contract Risk Assessments
+      summary: Delete Contract Risk Assessment
+      description: >-
+        Remove an existing risk assessment from the contract by its unique
+        identifier.
+      operationId: deleteRiskAssessment
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: riskId
+          in: path
+          description: Unique identifier of the risk assessment to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Risk assessment deleted successfully
+        '404':
+          description: Risk assessment not found
+  '/api/v1/contracts/{contractId}/parties/{partyId}':
+    get:
+      tags:
+        - Contract Parties
+      summary: Get Contract Party
+      description: Retrieve a specific party linked to the contract by party ID.
+      operationId: getParty
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: partyId
+          in: path
+          description: Unique identifier of the party
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully retrieved the party link
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractPartyDTO'
+        '404':
+          description: Party link not found
+    put:
+      tags:
+        - Contract Parties
+      summary: Update Contract Party
+      description: Update an existing party link by its unique identifier.
+      operationId: updateParty
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: partyId
+          in: path
+          description: Unique identifier of the party to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractPartyDTO'
+        required: true
+      responses:
+        '200':
+          description: Party link updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractPartyDTO'
+        '404':
+          description: Party link not found
+    delete:
+      tags:
+        - Contract Parties
+      summary: Delete Contract Party
+      description: >-
+        Remove an existing party link from the contract by its unique
+        identifier.
+      operationId: deleteParty
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: partyId
+          in: path
+          description: Unique identifier of the party to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Party link deleted successfully
+        '404':
+          description: Party link not found
+  '/api/v1/contracts/{contractId}/events/{eventId}':
+    get:
+      tags:
+        - Contract Events
+      summary: Get Contract Event
+      description: Retrieve a specific event for the specified contract by event ID.
+      operationId: getEvent
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: eventId
+          in: path
+          description: Unique identifier of the event
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully retrieved the event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractEventDTO'
+        '404':
+          description: Event not found
+    put:
+      tags:
+        - Contract Events
+      summary: Update Contract Event
+      description: Update an existing event by its unique identifier.
+      operationId: updateEvent
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: eventId
+          in: path
+          description: Unique identifier of the event to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractEventDTO'
+        required: true
+      responses:
+        '200':
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractEventDTO'
+        '404':
+          description: Event not found
+    delete:
+      tags:
+        - Contract Events
+      summary: Delete Contract Event
+      description: >-
+        Remove an existing event record from the contract by its unique
+        identifier.
+      operationId: deleteEvent
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: eventId
+          in: path
+          description: Unique identifier of the event to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Event deleted successfully
+        '404':
+          description: Event not found
+  '/api/v1/contracts/{contractId}/documents/{documentId}':
+    get:
+      tags:
+        - Contract Documents
+      summary: Retrieve Contract Document
+      description: Retrieve an existing contract document by its unique identifier.
+      operationId: getDocument
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: documentId
+          in: path
+          description: Unique identifier of the document
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully retrieved the contract document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractDocumentDTO'
+        '404':
+          description: Document not found
+    put:
+      tags:
+        - Contract Documents
+      summary: Update Contract Document
+      description: Update an existing contract document by its unique identifier.
+      operationId: updateDocument
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: documentId
+          in: path
+          description: Unique identifier of the document
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractDocumentDTO'
+        required: true
+      responses:
+        '200':
+          description: Document updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractDocumentDTO'
+        '404':
+          description: Document not found
+    delete:
+      tags:
+        - Contract Documents
+      summary: Delete Contract Document
+      description: Remove an existing contract document by its unique identifier.
+      operationId: deleteDocument
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: documentId
+          in: path
+          description: Unique identifier of the document
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Document deleted successfully
+        '404':
+          description: Document not found
+  '/api/v1/contracts/{contractId}':
+    get:
+      tags:
+        - Contracts
+      summary: Get Contract by ID
+      description: Retrieve a specific contract by its unique identifier.
+      operationId: getContract
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully retrieved the contract
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractDTO'
+        '404':
+          description: Contract not found
+    put:
+      tags:
+        - Contracts
+      summary: Update Contract
+      description: Update an existing contract by its unique identifier.
+      operationId: updateContract
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractDTO'
+        required: true
+      responses:
+        '200':
+          description: Contract updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractDTO'
+        '404':
+          description: Contract not found
+    delete:
+      tags:
+        - Contracts
+      summary: Delete Contract
+      description: Remove a specific contract record by its unique identifier.
+      operationId: deleteContract
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Contract deleted successfully
+        '404':
+          description: Contract not found
+  '/api/v1/contracts/{contractId}/terms':
+    get:
+      tags:
+        - Contract Terms
+      summary: Retrieve Contract Terms
+      description: Retrieves a paginated list of terms for the specified contract.
+      operationId: getAllTerms
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageNumber
+          in: query
+          description: The zero-based page number to retrieve.
+          required: false
+          schema:
+            type: string
+            description: The zero-based page number to retrieve.
+            example: 0
+            default: '0'
+          example: 0
+        - name: pageSize
+          in: query
+          description: The number of items per page.
+          required: false
+          schema:
+            type: string
+            description: The number of items per page.
+            example: 10
+            default: '10'
+          example: 10
+        - name: sortBy
+          in: query
+          description: The field to sort the results by.
+          required: false
+          schema:
+            type: string
+            description: The field to sort the results by.
+            example: name
+          example: name
+        - name: sortDirection
+          in: query
+          description: 'The direction of sorting, either ASC or DESC.'
+          required: false
+          schema:
+            type: string
+            description: 'The direction of sorting, either ASC or DESC.'
+            example: DESC
+            default: DESC
+          example: DESC
+      responses:
+        '200':
+          description: Successfully retrieved contract terms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '404':
+          description: No terms found for the specified contract
+    post:
+      tags:
+        - Contract Terms
+      summary: Create Contract Term
+      description: Creates a new term for the specified contract.
+      operationId: createTerm
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractTermDTO'
+        required: true
+      responses:
+        '201':
+          description: Term created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractTermDTO'
+        '400':
+          description: Invalid term data provided
+  '/api/v1/contracts/{contractId}/status-history':
+    get:
+      tags:
+        - Contract Status History
+      summary: Retrieve Contract Status History
+      description: >-
+        Retrieves a paginated list of status history records for the specified
+        contract.
+      operationId: getAllStatuses
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageNumber
+          in: query
+          description: The zero-based page number to retrieve.
+          required: false
+          schema:
+            type: string
+            description: The zero-based page number to retrieve.
+            example: 0
+            default: '0'
+          example: 0
+        - name: pageSize
+          in: query
+          description: The number of items per page.
+          required: false
+          schema:
+            type: string
+            description: The number of items per page.
+            example: 10
+            default: '10'
+          example: 10
+        - name: sortBy
+          in: query
+          description: The field to sort the results by.
+          required: false
+          schema:
+            type: string
+            description: The field to sort the results by.
+            example: name
+          example: name
+        - name: sortDirection
+          in: query
+          description: 'The direction of sorting, either ASC or DESC.'
+          required: false
+          schema:
+            type: string
+            description: 'The direction of sorting, either ASC or DESC.'
+            example: DESC
+            default: DESC
+          example: DESC
+      responses:
+        '200':
+          description: Successfully retrieved contract status history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '404':
+          description: No status history found for the specified contract
+    post:
+      tags:
+        - Contract Status History
+      summary: Create Contract Status History
+      description: Creates a new status history record for the specified contract.
+      operationId: createStatusHistory
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractStatusHistoryDTO'
+        required: true
+      responses:
+        '201':
+          description: Status history record created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractStatusHistoryDTO'
+        '400':
+          description: Invalid status history data provided
+  '/api/v1/contracts/{contractId}/risk-assessments':
+    get:
+      tags:
+        - Contract Risk Assessments
+      summary: Retrieve Contract Risk Assessments
+      description: >-
+        Retrieves a paginated list of risk assessments for the specified
+        contract.
+      operationId: getAllRiskAssessments
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageNumber
+          in: query
+          description: The zero-based page number to retrieve.
+          required: false
+          schema:
+            type: string
+            description: The zero-based page number to retrieve.
+            example: 0
+            default: '0'
+          example: 0
+        - name: pageSize
+          in: query
+          description: The number of items per page.
+          required: false
+          schema:
+            type: string
+            description: The number of items per page.
+            example: 10
+            default: '10'
+          example: 10
+        - name: sortBy
+          in: query
+          description: The field to sort the results by.
+          required: false
+          schema:
+            type: string
+            description: The field to sort the results by.
+            example: name
+          example: name
+        - name: sortDirection
+          in: query
+          description: 'The direction of sorting, either ASC or DESC.'
+          required: false
+          schema:
+            type: string
+            description: 'The direction of sorting, either ASC or DESC.'
+            example: DESC
+            default: DESC
+          example: DESC
+      responses:
+        '200':
+          description: Successfully retrieved risk assessments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '404':
+          description: No risk assessments found for the specified contract
+    post:
+      tags:
+        - Contract Risk Assessments
+      summary: Create Contract Risk Assessment
+      description: Creates a new risk assessment for the specified contract.
+      operationId: createRiskAssessment
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractRiskAssessmentDTO'
+        required: true
+      responses:
+        '201':
+          description: Risk assessment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractRiskAssessmentDTO'
+        '400':
+          description: Invalid risk assessment data provided
+  '/api/v1/contracts/{contractId}/parties':
+    get:
+      tags:
+        - Contract Parties
+      summary: Retrieve Contract Parties
+      description: Retrieves a paginated list of parties for the specified contract.
+      operationId: getAllParties
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageNumber
+          in: query
+          description: The zero-based page number to retrieve.
+          required: false
+          schema:
+            type: string
+            description: The zero-based page number to retrieve.
+            example: 0
+            default: '0'
+          example: 0
+        - name: pageSize
+          in: query
+          description: The number of items per page.
+          required: false
+          schema:
+            type: string
+            description: The number of items per page.
+            example: 10
+            default: '10'
+          example: 10
+        - name: sortBy
+          in: query
+          description: The field to sort the results by.
+          required: false
+          schema:
+            type: string
+            description: The field to sort the results by.
+            example: name
+          example: name
+        - name: sortDirection
+          in: query
+          description: 'The direction of sorting, either ASC or DESC.'
+          required: false
+          schema:
+            type: string
+            description: 'The direction of sorting, either ASC or DESC.'
+            example: DESC
+            default: DESC
+          example: DESC
+      responses:
+        '200':
+          description: Successfully retrieved contract parties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '404':
+          description: No parties found for the specified contract
+    post:
+      tags:
+        - Contract Parties
+      summary: Create Contract Party Link
+      description: Creates a new party link for the specified contract.
+      operationId: createPartyLink
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractPartyDTO'
+        required: true
+      responses:
+        '201':
+          description: Party link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractPartyDTO'
+        '400':
+          description: Invalid party data provided
+  '/api/v1/contracts/{contractId}/events':
+    get:
+      tags:
+        - Contract Events
+      summary: Retrieve Contract Events
+      description: Retrieves a paginated list of events for the specified contract.
+      operationId: getAllEvents
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageNumber
+          in: query
+          description: The zero-based page number to retrieve.
+          required: false
+          schema:
+            type: string
+            description: The zero-based page number to retrieve.
+            example: 0
+            default: '0'
+          example: 0
+        - name: pageSize
+          in: query
+          description: The number of items per page.
+          required: false
+          schema:
+            type: string
+            description: The number of items per page.
+            example: 10
+            default: '10'
+          example: 10
+        - name: sortBy
+          in: query
+          description: The field to sort the results by.
+          required: false
+          schema:
+            type: string
+            description: The field to sort the results by.
+            example: name
+          example: name
+        - name: sortDirection
+          in: query
+          description: 'The direction of sorting, either ASC or DESC.'
+          required: false
+          schema:
+            type: string
+            description: 'The direction of sorting, either ASC or DESC.'
+            example: DESC
+            default: DESC
+          example: DESC
+      responses:
+        '200':
+          description: Successfully retrieved contract events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '404':
+          description: No events found
+    post:
+      tags:
+        - Contract Events
+      summary: Create Contract Event
+      description: Create a new event record for the specified contract.
+      operationId: createEvent
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractEventDTO'
+        required: true
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractEventDTO'
+        '400':
+          description: Invalid event data provided
+  '/api/v1/contracts/{contractId}/documents':
+    get:
+      tags:
+        - Contract Documents
+      summary: Retrieve Contract Documents
+      description: >-
+        Retrieves a paginated list of contract documents for the specified
+        contract.
+      operationId: getAllDocuments
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageNumber
+          in: query
+          description: The zero-based page number to retrieve.
+          required: false
+          schema:
+            type: string
+            description: The zero-based page number to retrieve.
+            example: 0
+            default: '0'
+          example: 0
+        - name: pageSize
+          in: query
+          description: The number of items per page.
+          required: false
+          schema:
+            type: string
+            description: The number of items per page.
+            example: 10
+            default: '10'
+          example: 10
+        - name: sortBy
+          in: query
+          description: The field to sort the results by.
+          required: false
+          schema:
+            type: string
+            description: The field to sort the results by.
+            example: name
+          example: name
+        - name: sortDirection
+          in: query
+          description: 'The direction of sorting, either ASC or DESC.'
+          required: false
+          schema:
+            type: string
+            description: 'The direction of sorting, either ASC or DESC.'
+            example: DESC
+            default: DESC
+          example: DESC
+      responses:
+        '200':
+          description: Successfully retrieved contract documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '404':
+          description: No documents found
+    post:
+      tags:
+        - Contract Documents
+      summary: Create Contract Document
+      description: Create a new contract document for the specified contract.
+      operationId: createDocument
+      parameters:
+        - name: contractId
+          in: path
+          description: Unique identifier of the contract
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractDocumentDTO'
+        required: true
+      responses:
+        '201':
+          description: Document created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractDocumentDTO'
+        '400':
+          description: Invalid contract document data
+  /api/v1/contracts/filter:
+    post:
+      tags:
+        - Contracts
+      summary: Filter Contracts
+      description: Apply filters to retrieve a paginated list of contracts.
+      operationId: filterContracts
+      parameters:
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequestContractDTO'
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved filtered contracts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponseContractDTO'
+        '404':
+          description: No results found
+  /api/v1/contracts:
+    post:
+      tags:
+        - Contracts
+      summary: Create Contract
+      description: Create a new contract record.
+      operationId: createContract
+      parameters:
+        - name: X-Idempotency-Key
+          in: header
+          description: >-
+            Unique key for idempotent requests. If provided, ensures that
+            identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractDTO'
+        required: true
+      responses:
+        '201':
+          description: Contract created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractDTO'
+        '400':
+          description: Invalid contract data provided
+components:
+  schemas:
+    ContractTermDTO:
+      type: object
+      properties:
+        dateCreated:
+          type: string
+          format: date-time
+          readOnly: true
+        dateUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+        contractTermId:
+          type: integer
+          format: int64
+          readOnly: true
+        contractId:
+          type: integer
+          format: int64
+        termType:
+          type: string
+          enum:
+            - INTEREST_RATE
+            - CREDIT_LIMIT
+            - FEE_SCHEDULE
+            - PAYMENT_SCHEDULE
+            - PENALTY_RATE
+        termDescription:
+          type: string
+        numericValue:
+          type: number
+        valueUnit:
+          type: string
+        effectiveDate:
+          type: string
+          format: date-time
+        expirationDate:
+          type: string
+          format: date-time
+    ContractStatusHistoryDTO:
+      type: object
+      properties:
+        dateCreated:
+          type: string
+          format: date-time
+          readOnly: true
+        dateUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+        contractStatusHistoryId:
+          type: integer
+          format: int64
+          readOnly: true
+        contractId:
+          type: integer
+          format: int64
+        statusCode:
+          type: string
+          enum:
+            - DRAFT
+            - ACTIVE
+            - DELINQUENT
+            - DEFAULT
+            - CLOSED
+            - CANCELLED
+        statusStartDate:
+          type: string
+          format: date-time
+        statusEndDate:
+          type: string
+          format: date-time
+    ContractRiskAssessmentDTO:
+      type: object
+      properties:
+        dateCreated:
+          type: string
+          format: date-time
+          readOnly: true
+        dateUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+        contractRiskAssessmentId:
+          type: integer
+          format: int64
+          readOnly: true
+        contractId:
+          type: integer
+          format: int64
+        riskScore:
+          type: number
+        riskLevel:
+          type: string
+          enum:
+            - LOW
+            - MEDIUM
+            - HIGH
+            - CRITICAL
+        assessmentDate:
+          type: string
+          format: date-time
+        assessor:
+          type: string
+        notes:
+          type: string
+    ContractPartyDTO:
+      type: object
+      properties:
+        dateCreated:
+          type: string
+          format: date-time
+          readOnly: true
+        dateUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+        contractPartyId:
+          type: integer
+          format: int64
+          readOnly: true
+        contractId:
+          type: integer
+          format: int64
+        partyId:
+          type: integer
+          format: int64
+        roleInContract:
+          type: string
+          enum:
+            - PRIMARY_HOLDER
+            - JOINT_HOLDER
+            - GUARANTOR
+            - BENEFICIARY
+            - AUTHORIZED_USER
+        dateJoined:
+          type: string
+          format: date-time
+        dateLeft:
+          type: string
+          format: date-time
+        active:
+          type: boolean
+    ContractEventDTO:
+      type: object
+      properties:
+        dateCreated:
+          type: string
+          format: date-time
+          readOnly: true
+        dateUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+        contractEventId:
+          type: integer
+          format: int64
+          readOnly: true
+        contractId:
+          type: integer
+          format: int64
+        eventType:
+          type: string
+          enum:
+            - RENEWAL
+            - AMENDMENT
+            - CANCELLATION
+            - SUSPENSION
+            - REACTIVATION
+            - TERMINATION
+        eventDate:
+          type: string
+          format: date-time
+        eventDescription:
+          type: string
+        documentManagerRef:
+          type: string
+    ContractDocumentDTO:
+      type: object
+      properties:
+        dateCreated:
+          type: string
+          format: date-time
+          readOnly: true
+        dateUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+        contractDocumentId:
+          type: integer
+          format: int64
+          readOnly: true
+        contractId:
+          type: integer
+          format: int64
+        documentType:
+          type: string
+        documentManagerRef:
+          type: string
+        dateAdded:
+          type: string
+          format: date-time
+    ContractDTO:
+      type: object
+      properties:
+        dateCreated:
+          type: string
+          format: date-time
+          readOnly: true
+        dateUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+        contractId:
+          type: integer
+          format: int64
+          readOnly: true
+        contractNumber:
+          type: string
+        productId:
+          type: integer
+          format: int64
+        contractType:
+          type: string
+          enum:
+            - ACCOUNT
+            - CARD
+            - LOAN
+            - MORTGAGE
+            - INVESTMENT
+        contractStatus:
+          type: string
+          enum:
+            - DRAFT
+            - PENDING
+            - ACTIVE
+            - SUSPENDED
+            - CLOSED
+            - CANCELLED
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        documentManagerRef:
+          type: string
+    FilterOptions:
+      type: object
+      properties:
+        caseInsensitiveStrings:
+          type: boolean
+        includeInheritedFields:
+          type: boolean
+      description: Filter options for customizing filter behavior
+    FilterRequestContractDTO:
+      required:
+        - pagination
+      type: object
+      properties:
+        filters:
+          $ref: '#/components/schemas/ContractDTO'
+        rangeFilters:
+          $ref: '#/components/schemas/RangeFilter'
+        pagination:
+          $ref: '#/components/schemas/PaginationRequest'
+        options:
+          $ref: '#/components/schemas/FilterOptions'
+      description: Generic filter request that includes both filter criteria and pagination
+    PaginationRequest:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The zero-based page number to retrieve.
+          format: int32
+          example: 0
+          default: 0
+        pageSize:
+          type: integer
+          description: The number of items per page.
+          format: int32
+          example: 10
+          default: 10
+        sortBy:
+          type: string
+          description: The field to sort the results by.
+          example: name
+        sortDirection:
+          type: string
+          description: 'The direction of sorting, either ASC or DESC.'
+          example: DESC
+          default: DESC
+      description: >-
+        Represents a pagination request for retrieving paginated results,
+        including page number, size, sort field, and direction.
+    RangeFilter:
+      type: object
+      properties:
+        ranges:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RangeObject'
+          description: Map of field names to their range criteria
+      description: Represents range filters for numeric fields
+    RangeObject:
+      type: object
+      properties:
+        from:
+          type: object
+          description: Start value of the range
+        to:
+          type: object
+          description: End value of the range
+      description: Represents a range with from and to values
+    PaginationResponseContractDTO:
+      type: object
+      properties:
+        content:
+          type: array
+          description: The list of items for the current page.
+          items:
+            $ref: '#/components/schemas/ContractDTO'
+        totalElements:
+          type: integer
+          description: The total number of elements across all pages.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages based on the data size and page size.
+          format: int32
+        currentPage:
+          type: integer
+          description: 'The current page number, typically zero-based.'
+          format: int32
+      description: >-
+        Represents a paginated response containing a list of items and
+        pagination metadata.
+    PaginationResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          description: The list of items for the current page.
+          items:
+            type: object
+            description: The list of items for the current page.
+        totalElements:
+          type: integer
+          description: The total number of elements across all pages.
+          format: int64
+        totalPages:
+          type: integer
+          description: The total number of pages based on the data size and page size.
+          format: int32
+        currentPage:
+          type: integer
+          description: 'The current page number, typically zero-based.'
+          format: int32
+      description: >-
+        Represents a paginated response containing a list of items and
+        pagination metadata.
