@@ -1,5 +1,6 @@
 package com.catalis.core.contract.interfaces.dtos.terms.v1;
 
+import com.catalis.annotations.ValidDate;
 import com.catalis.core.contract.interfaces.dtos.BaseDTO;
 import com.catalis.core.contract.interfaces.enums.terms.v1.TermTypeEnum;
 import com.catalis.core.utils.annotations.FilterableId;
@@ -26,9 +27,12 @@ public class ContractTermDTO extends BaseDTO {
 
     private TermTypeEnum termType;
     private String termDescription;
+
     private BigDecimal numericValue;
     private String valueUnit;
+    @ValidDate
     private LocalDateTime effectiveDate;
+    @ValidDate
     private LocalDateTime expirationDate;
 
 }

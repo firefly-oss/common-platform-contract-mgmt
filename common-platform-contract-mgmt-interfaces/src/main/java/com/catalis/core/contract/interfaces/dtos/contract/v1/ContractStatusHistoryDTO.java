@@ -1,5 +1,6 @@
 package com.catalis.core.contract.interfaces.dtos.contract.v1;
 
+import com.catalis.annotations.ValidDate;
 import com.catalis.core.contract.interfaces.dtos.BaseDTO;
 import com.catalis.core.contract.interfaces.enums.contract.v1.StatusCodeEnum;
 import com.catalis.core.utils.annotations.FilterableId;
@@ -24,7 +25,9 @@ public class ContractStatusHistoryDTO extends BaseDTO {
     private Long contractId;
 
     private StatusCodeEnum statusCode;
+    @ValidDate
     private LocalDateTime statusStartDate;
+    @ValidDate
     private LocalDateTime statusEndDate;
 
 }

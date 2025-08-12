@@ -1,5 +1,6 @@
 package com.catalis.core.contract.interfaces.dtos.events.v1;
 
+import com.catalis.annotations.ValidDate;
 import com.catalis.core.contract.interfaces.dtos.BaseDTO;
 import com.catalis.core.contract.interfaces.enums.events.v1.EventTypeEnum;
 import com.catalis.core.utils.annotations.FilterableId;
@@ -24,6 +25,7 @@ public class ContractEventDTO extends BaseDTO {
     private Long contractId;
 
     private EventTypeEnum eventType;
+    @ValidDate
     private LocalDateTime eventDate;
     private String eventDescription;
     private String documentManagerRef;

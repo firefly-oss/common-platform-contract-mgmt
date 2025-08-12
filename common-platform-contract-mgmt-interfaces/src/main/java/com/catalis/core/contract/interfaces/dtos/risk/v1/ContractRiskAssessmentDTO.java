@@ -1,5 +1,8 @@
 package com.catalis.core.contract.interfaces.dtos.risk.v1;
 
+import com.catalis.annotations.ValidAmount;
+import com.catalis.annotations.ValidDate;
+import com.catalis.annotations.ValidInterestRate;
 import com.catalis.core.contract.interfaces.dtos.BaseDTO;
 import com.catalis.core.contract.interfaces.enums.risk.v1.RiskLevelEnum;
 import com.catalis.core.utils.annotations.FilterableId;
@@ -24,8 +27,10 @@ public class ContractRiskAssessmentDTO extends BaseDTO {
     @FilterableId
     private Long contractId;
 
+    @ValidInterestRate
     private BigDecimal riskScore;
     private RiskLevelEnum riskLevel;
+    @ValidDate
     private LocalDateTime assessmentDate;
     private String assessor;
     private String notes;

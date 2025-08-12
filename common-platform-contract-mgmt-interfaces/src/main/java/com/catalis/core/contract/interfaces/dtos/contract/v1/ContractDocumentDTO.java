@@ -1,5 +1,6 @@
 package com.catalis.core.contract.interfaces.dtos.contract.v1;
 
+import com.catalis.annotations.ValidDate;
 import com.catalis.core.contract.interfaces.dtos.BaseDTO;
 import com.catalis.core.utils.annotations.FilterableId;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +25,7 @@ public class ContractDocumentDTO extends BaseDTO {
 
     private String documentType;
     private String documentManagerRef;
+    @ValidDate
     private LocalDateTime dateAdded;
 
 }
