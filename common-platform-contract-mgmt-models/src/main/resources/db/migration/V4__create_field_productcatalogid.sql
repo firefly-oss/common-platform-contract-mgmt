@@ -1,0 +1,1 @@
+ALTER TABLE contract ADD COLUMN product_catalog_id BIGINT NOT NULL;
