@@ -7,7 +7,7 @@ info:
     email: dev@catalis.com
   version: 1.0.0
 servers:
-  - url: 'http://core.catalis.vc/contracts'
+  - url: http://core.catalis.vc/contracts
     description: Development Environment
   - url: /
     description: Local Development Environment
@@ -27,7 +27,7 @@ tags:
   - name: Contract Terms
     description: APIs for managing terms of a contract
 paths:
-  '/api/v1/contracts/{contractId}/terms/{termId}':
+  /api/v1/contracts/{contractId}/terms/{termId}:
     get:
       tags:
         - Contract Terms
@@ -81,9 +81,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -128,7 +126,7 @@ paths:
           description: Term deleted successfully
         '404':
           description: Contract term not found
-  '/api/v1/contracts/{contractId}/status-history/{historyId}':
+  /api/v1/contracts/{contractId}/status-history/{historyId}:
     get:
       tags:
         - Contract Status History
@@ -182,9 +180,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -207,9 +203,7 @@ paths:
       tags:
         - Contract Status History
       summary: Delete Contract Status History
-      description: >-
-        Remove an existing status history record from the contract by its unique
-        identifier.
+      description: Remove an existing status history record from the contract by its unique identifier.
       operationId: deleteStatusHistory
       parameters:
         - name: contractId
@@ -231,7 +225,7 @@ paths:
           description: Status history record deleted successfully
         '404':
           description: Status history record not found
-  '/api/v1/contracts/{contractId}/risk-assessments/{riskId}':
+  /api/v1/contracts/{contractId}/risk-assessments/{riskId}:
     get:
       tags:
         - Contract Risk Assessments
@@ -285,9 +279,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -310,9 +302,7 @@ paths:
       tags:
         - Contract Risk Assessments
       summary: Delete Contract Risk Assessment
-      description: >-
-        Remove an existing risk assessment from the contract by its unique
-        identifier.
+      description: Remove an existing risk assessment from the contract by its unique identifier.
       operationId: deleteRiskAssessment
       parameters:
         - name: contractId
@@ -334,7 +324,7 @@ paths:
           description: Risk assessment deleted successfully
         '404':
           description: Risk assessment not found
-  '/api/v1/contracts/{contractId}/parties/{partyId}':
+  /api/v1/contracts/{contractId}/parties/{partyId}:
     get:
       tags:
         - Contract Parties
@@ -388,9 +378,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -413,9 +401,7 @@ paths:
       tags:
         - Contract Parties
       summary: Delete Contract Party
-      description: >-
-        Remove an existing party link from the contract by its unique
-        identifier.
+      description: Remove an existing party link from the contract by its unique identifier.
       operationId: deleteParty
       parameters:
         - name: contractId
@@ -437,7 +423,7 @@ paths:
           description: Party link deleted successfully
         '404':
           description: Party link not found
-  '/api/v1/contracts/{contractId}/events/{eventId}':
+  /api/v1/contracts/{contractId}/events/{eventId}:
     get:
       tags:
         - Contract Events
@@ -491,9 +477,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -516,9 +500,7 @@ paths:
       tags:
         - Contract Events
       summary: Delete Contract Event
-      description: >-
-        Remove an existing event record from the contract by its unique
-        identifier.
+      description: Remove an existing event record from the contract by its unique identifier.
       operationId: deleteEvent
       parameters:
         - name: contractId
@@ -540,7 +522,7 @@ paths:
           description: Event deleted successfully
         '404':
           description: Event not found
-  '/api/v1/contracts/{contractId}/documents/{documentId}':
+  /api/v1/contracts/{contractId}/documents/{documentId}:
     get:
       tags:
         - Contract Documents
@@ -594,9 +576,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -641,7 +621,7 @@ paths:
           description: Document deleted successfully
         '404':
           description: Document not found
-  '/api/v1/contracts/{contractId}':
+  /api/v1/contracts/{contractId}:
     get:
       tags:
         - Contracts
@@ -681,9 +661,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -721,7 +699,7 @@ paths:
           description: Contract deleted successfully
         '404':
           description: Contract not found
-  '/api/v1/contracts/{contractId}/terms':
+  /api/v1/contracts/{contractId}/terms:
     get:
       tags:
         - Contract Terms
@@ -767,11 +745,11 @@ paths:
           example: name
         - name: sortDirection
           in: query
-          description: 'The direction of sorting, either ASC or DESC.'
+          description: The direction of sorting, either ASC or DESC.
           required: false
           schema:
             type: string
-            description: 'The direction of sorting, either ASC or DESC.'
+            description: The direction of sorting, either ASC or DESC.
             example: DESC
             default: DESC
           example: DESC
@@ -800,9 +778,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -821,14 +797,12 @@ paths:
                 $ref: '#/components/schemas/ContractTermDTO'
         '400':
           description: Invalid term data provided
-  '/api/v1/contracts/{contractId}/status-history':
+  /api/v1/contracts/{contractId}/status-history:
     get:
       tags:
         - Contract Status History
       summary: Retrieve Contract Status History
-      description: >-
-        Retrieves a paginated list of status history records for the specified
-        contract.
+      description: Retrieves a paginated list of status history records for the specified contract.
       operationId: getAllStatuses
       parameters:
         - name: contractId
@@ -869,11 +843,11 @@ paths:
           example: name
         - name: sortDirection
           in: query
-          description: 'The direction of sorting, either ASC or DESC.'
+          description: The direction of sorting, either ASC or DESC.
           required: false
           schema:
             type: string
-            description: 'The direction of sorting, either ASC or DESC.'
+            description: The direction of sorting, either ASC or DESC.
             example: DESC
             default: DESC
           example: DESC
@@ -902,9 +876,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -923,14 +895,12 @@ paths:
                 $ref: '#/components/schemas/ContractStatusHistoryDTO'
         '400':
           description: Invalid status history data provided
-  '/api/v1/contracts/{contractId}/risk-assessments':
+  /api/v1/contracts/{contractId}/risk-assessments:
     get:
       tags:
         - Contract Risk Assessments
       summary: Retrieve Contract Risk Assessments
-      description: >-
-        Retrieves a paginated list of risk assessments for the specified
-        contract.
+      description: Retrieves a paginated list of risk assessments for the specified contract.
       operationId: getAllRiskAssessments
       parameters:
         - name: contractId
@@ -971,11 +941,11 @@ paths:
           example: name
         - name: sortDirection
           in: query
-          description: 'The direction of sorting, either ASC or DESC.'
+          description: The direction of sorting, either ASC or DESC.
           required: false
           schema:
             type: string
-            description: 'The direction of sorting, either ASC or DESC.'
+            description: The direction of sorting, either ASC or DESC.
             example: DESC
             default: DESC
           example: DESC
@@ -1004,9 +974,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -1025,7 +993,7 @@ paths:
                 $ref: '#/components/schemas/ContractRiskAssessmentDTO'
         '400':
           description: Invalid risk assessment data provided
-  '/api/v1/contracts/{contractId}/parties':
+  /api/v1/contracts/{contractId}/parties:
     get:
       tags:
         - Contract Parties
@@ -1071,11 +1039,11 @@ paths:
           example: name
         - name: sortDirection
           in: query
-          description: 'The direction of sorting, either ASC or DESC.'
+          description: The direction of sorting, either ASC or DESC.
           required: false
           schema:
             type: string
-            description: 'The direction of sorting, either ASC or DESC.'
+            description: The direction of sorting, either ASC or DESC.
             example: DESC
             default: DESC
           example: DESC
@@ -1104,9 +1072,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -1125,7 +1091,7 @@ paths:
                 $ref: '#/components/schemas/ContractPartyDTO'
         '400':
           description: Invalid party data provided
-  '/api/v1/contracts/{contractId}/events':
+  /api/v1/contracts/{contractId}/events:
     get:
       tags:
         - Contract Events
@@ -1171,11 +1137,11 @@ paths:
           example: name
         - name: sortDirection
           in: query
-          description: 'The direction of sorting, either ASC or DESC.'
+          description: The direction of sorting, either ASC or DESC.
           required: false
           schema:
             type: string
-            description: 'The direction of sorting, either ASC or DESC.'
+            description: The direction of sorting, either ASC or DESC.
             example: DESC
             default: DESC
           example: DESC
@@ -1204,9 +1170,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -1225,14 +1189,12 @@ paths:
                 $ref: '#/components/schemas/ContractEventDTO'
         '400':
           description: Invalid event data provided
-  '/api/v1/contracts/{contractId}/documents':
+  /api/v1/contracts/{contractId}/documents:
     get:
       tags:
         - Contract Documents
       summary: Retrieve Contract Documents
-      description: >-
-        Retrieves a paginated list of contract documents for the specified
-        contract.
+      description: Retrieves a paginated list of contract documents for the specified contract.
       operationId: getAllDocuments
       parameters:
         - name: contractId
@@ -1273,11 +1235,11 @@ paths:
           example: name
         - name: sortDirection
           in: query
-          description: 'The direction of sorting, either ASC or DESC.'
+          description: The direction of sorting, either ASC or DESC.
           required: false
           schema:
             type: string
-            description: 'The direction of sorting, either ASC or DESC.'
+            description: The direction of sorting, either ASC or DESC.
             example: DESC
             default: DESC
           example: DESC
@@ -1306,9 +1268,7 @@ paths:
             format: int64
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -1337,9 +1297,7 @@ paths:
       parameters:
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -1368,9 +1326,7 @@ paths:
       parameters:
         - name: X-Idempotency-Key
           in: header
-          description: >-
-            Unique key for idempotent requests. If provided, ensures that
-            identical requests with the same key will only be processed once.
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
           required: false
           schema:
             type: string
@@ -1517,14 +1473,9 @@ components:
         partyId:
           type: integer
           format: int64
-        roleInContract:
-          type: string
-          enum:
-            - PRIMARY_HOLDER
-            - JOINT_HOLDER
-            - GUARANTOR
-            - BENEFICIARY
-            - AUTHORIZED_USER
+        roleInContractId:
+          type: integer
+          format: int64
         dateJoined:
           type: string
           format: date-time
@@ -1609,17 +1560,12 @@ components:
           readOnly: true
         contractNumber:
           type: string
+        productCatalogId:
+          type: integer
+          format: int64
         productId:
           type: integer
           format: int64
-        contractType:
-          type: string
-          enum:
-            - ACCOUNT
-            - CARD
-            - LOAN
-            - MORTGAGE
-            - INVESTMENT
         contractStatus:
           type: string
           enum:
@@ -1680,12 +1626,10 @@ components:
           example: name
         sortDirection:
           type: string
-          description: 'The direction of sorting, either ASC or DESC.'
+          description: The direction of sorting, either ASC or DESC.
           example: DESC
           default: DESC
-      description: >-
-        Represents a pagination request for retrieving paginated results,
-        including page number, size, sort field, and direction.
+      description: Represents a pagination request for retrieving paginated results, including page number, size, sort field, and direction.
     RangeFilter:
       type: object
       properties:
@@ -1723,11 +1667,9 @@ components:
           format: int32
         currentPage:
           type: integer
-          description: 'The current page number, typically zero-based.'
+          description: The current page number, typically zero-based.
           format: int32
-      description: >-
-        Represents a paginated response containing a list of items and
-        pagination metadata.
+      description: Represents a paginated response containing a list of items and pagination metadata.
     PaginationResponse:
       type: object
       properties:
@@ -1747,8 +1689,6 @@ components:
           format: int32
         currentPage:
           type: integer
-          description: 'The current page number, typically zero-based.'
+          description: The current page number, typically zero-based.
           format: int32
-      description: >-
-        Represents a paginated response containing a list of items and
-        pagination metadata.
+      description: Represents a paginated response containing a list of items and pagination metadata.
