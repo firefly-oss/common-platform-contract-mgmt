@@ -29,5 +29,7 @@ replay_pid*
 *.iml
 *.iws
 
-# Target folder
-target/
+# Build artifacts
+# Ignore all Maven/Gradle target directories and generated sources across modules
+**/target/
+**/generated-sources/
