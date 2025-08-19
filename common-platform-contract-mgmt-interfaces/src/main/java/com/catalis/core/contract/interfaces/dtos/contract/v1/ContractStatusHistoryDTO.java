@@ -25,8 +25,10 @@ public class ContractStatusHistoryDTO extends BaseDTO {
     private Long contractId;
 
     private StatusCodeEnum statusCode;
+
     @ValidDate
     private LocalDateTime statusStartDate;
+
     @ValidDate
     private LocalDateTime statusEndDate;
 

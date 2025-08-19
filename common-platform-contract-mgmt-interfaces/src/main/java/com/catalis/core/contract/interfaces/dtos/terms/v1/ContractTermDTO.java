@@ -30,8 +30,10 @@ public class ContractTermDTO extends BaseDTO {
 
     private BigDecimal numericValue;
     private String valueUnit;
+
     @ValidDate
     private LocalDateTime effectiveDate;
+
     @ValidDate
     private LocalDateTime expirationDate;
 

@@ -2,7 +2,6 @@ package com.catalis.core.contract.interfaces.dtos.contract.v1;
 
 import com.catalis.annotations.ValidDate;
 import com.catalis.core.contract.interfaces.dtos.BaseDTO;
-import com.catalis.core.contract.interfaces.enums.contract.v1.RoleInContractEnum;
 import com.catalis.core.utils.annotations.FilterableId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -27,7 +26,9 @@ public class ContractPartyDTO extends BaseDTO {
     @FilterableId
     private Long partyId;
 
-    private RoleInContractEnum roleInContract;
+    @FilterableId
+    private Long roleInContractId;
+
     @ValidDate
     private LocalDateTime dateJoined;
     @ValidDate

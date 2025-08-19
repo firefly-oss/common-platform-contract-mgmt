@@ -25,8 +25,10 @@ public class ContractEventDTO extends BaseDTO {
     private Long contractId;
 
     private EventTypeEnum eventType;
+
     @ValidDate
     private LocalDateTime eventDate;
+
     private String eventDescription;
     private String documentManagerRef;
 

@@ -25,6 +25,7 @@ public class ContractDocumentDTO extends BaseDTO {
 
     private String documentType;
     private String documentManagerRef;
+
     @ValidDate
     private LocalDateTime dateAdded;
 
