@@ -13,6 +13,8 @@
   - Local Development Setup
   - Docker Deployment
 - Configuration
+- Profiles
+- Caching
 - Development Guidelines
 - Contributing
 
@@ -36,16 +38,19 @@ This microservice follows a modular architecture with clear separation of concer
 - **common-platform-contract-mgmt-models**: Contains database entities and repositories
 - **common-platform-contract-mgmt-core**: Contains business logic and service implementations
 - **common-platform-contract-mgmt-web**: Contains REST controllers and web configuration
+- **common-platform-contract-mgmt-sdk**: Generated OpenAPI client SDK and docs
 
 ### Technology Stack
 - Java 21
 - Spring Boot
 - Spring WebFlux (Reactive programming)
-- PostgreSQL
+- Spring Data R2DBC (Reactive PostgreSQL)
 - Flyway for database migrations
+- Caffeine (dev/testing) and Redis (prod) as cache providers
+- Virtual threads (Spring threads.virtual) enabled
 - Maven for dependency management
 - Docker for containerization
-- OpenAPI/Swagger for API documentation
+- springdoc-openapi (Swagger UI) for API documentation
 
 ## Data Model
 Below is the complete entity-relationship diagram, modeled in Mermaid and including attributes (with types) and relationships. Read-only fields are noted with [read-only].
@@ -209,7 +214,7 @@ The service provides a RESTful API with the following main endpoints:
 - `/api/v1/contracts/{contractId}/events`: Contract event management
 - `/api/v1/contracts/{contractId}/risk-assessments`: Contract risk assessment management
 
-Detailed API documentation is available via Swagger UI at `/swagger-ui.html` when the service is running.
+Detailed API documentation is available via Swagger UI at `/swagger-ui.html` when the service is running. Note: in the `prod` profile, OpenAPI endpoints and Swagger UI are disabled per configuration.
 
 ## Setup and Installation
 
@@ -237,14 +242,112 @@ docker run -p 8080:8080 common-platform-contract-mgmt
 ```
 
 ## Configuration
-The service can be configured through environment variables or application properties:
+The service can be configured through environment variables or application properties. Key properties and defaults (see application.yml for full details):
 
 | Property | Description | Default |
 |----------|-------------|---------|
-| `spring.datasource.url` | Database URL | jdbc:postgresql://localhost:5432/contract_mgmt |
-| `spring.datasource.username` | Database username | postgres |
-| `spring.datasource.password` | Database password | postgres |
-| `server.port` | Application port | 8080 |
+| `spring.r2dbc.url` | Reactive DB URL | `r2dbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslMode=${DB_SSL_MODE}` |
+| `spring.r2dbc.username` | DB username | `${DB_USERNAME}` |
+| `spring.r2dbc.password` | DB password | `${DB_PASSWORD}` |
+| `spring.flyway.url` | JDBC URL for Flyway | `jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslMode=${DB_SSL_MODE}` |
+| `spring.flyway.user` | Flyway username | `${DB_USERNAME}` |
+| `spring.flyway.password` | Flyway password | `${DB_PASSWORD}` |
+| `server.port` | Application port | `8080` |
+| `spring.threads.virtual.enabled` | Enable virtual threads | `true` |
+
+Environment variables commonly used:
+- DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD, DB_SSL_MODE
+- REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_SSL (prod)
+- SPRING_PROFILES_ACTIVE (e.g., dev, testing, prod)
+
+## Profiles
+- dev
+  - Cache: Caffeine
+  - Swagger/OpenAPI: enabled
+  - Logging: com.catalis DEBUG, r2dbc DEBUG, flyway DEBUG
+- testing
+  - Cache: Caffeine
+  - Swagger/OpenAPI: enabled
+  - Logging: com.catalis DEBUG
+- prod
+  - Cache: Redis (TTL 600s, key prefix `contract:`)
+  - Swagger/OpenAPI: disabled
+  - Logging: more restrictive (root WARN)
+  - Management endpoints exposed: health, info, prometheus
+
+## Caching
+The service uses Spring Cache to speed up hot read paths and reduce database load. Caching is enabled application-wide via `@EnableCaching` in the web module.
+
+What is cached
+- Contract by ID: cache name "contract"; key = contractId (e.g., 42)
+- Contract Party by contract and party ID: cache name "contractParty"; key = `contractId:partyId` (e.g., "42:7")
+
+What is not cached
+- List, filter, and pagination endpoints are not cached to avoid stale pages and to keep the strategy simple.
+
+Eviction policy (write operations)
+- Create/Update/Delete ContractParty: evicts the specific "contractParty" key for the affected pair.
+- Update Contract: evicts the "contract" entry for that contractId.
+- Delete Contract: evicts the "contract" entry and all entries in "contractParty" (cascade cleanup, since all related parties are invalidated).
+
+Providers by profile and defaults
+- dev, testing: Caffeine in-memory cache
+  - Spec: `maximumSize=1000,expireAfterWrite=600s,recordStats`
+- prod: Redis distributed cache
+  - TTL: 600s
+  - Key prefix: `contract:` (namespaces all cache entries)
+  - Null values: disabled (no caching of nulls)
+
+Key configuration (application.yml excerpts)
+```yaml
+# dev / testing
+spring:
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=600s,recordStats
+```
+
+```yaml
+# prod
+spring:
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600s
+      key-prefix: "contract:"
+      cache-null-values: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      ssl:
+        enabled: ${REDIS_SSL:false}
+```
+
+Tuning and operations
+- To change TTL/size:
+  - Caffeine: override `spring.cache.caffeine.spec`
+  - Redis: override `spring.cache.redis.time-to-live`
+- To disable caching entirely: set `spring.cache.type=none` for the desired profile.
+- Caffeine stats are enabled via `recordStats` (useful for local diagnostics).
+
+Relevant code locations
+- Enable Caching: `common-platform-contract-mgmt-web/.../ContractManagementApplication.java` (`@EnableCaching`)
+- Contract cache logic: `common-platform-contract-mgmt-core/.../ContractServiceImpl.java`
+  - `@Cacheable("contract")` on get-by-id
+  - `@CacheEvict("contract")` on update
+  - `@Caching(evict = { @CacheEvict("contract"), @CacheEvict(cacheNames = "contractParty", allEntries = true) })` on delete
+- ContractParty cache logic: `common-platform-contract-mgmt-core/.../ContractPartyServiceImpl.java`
+  - `@Cacheable("contractParty")` on get-by-id pair
+  - `@CacheEvict("contractParty")` on create/update/delete
+- Configuration examples: `common-platform-contract-mgmt-web/src/main/resources/application.yml`
+
+Notes and best practices
+- Keep cache keys stable and deterministic (we use plain Long IDs and a composite "contractId:partyId" string).
+- Always add appropriate `@CacheEvict` or `@Caching` when introducing new write paths that affect cached reads.
+- Avoid caching endpoints that return large or highly dynamic collections.
 
 ## Development Guidelines
 - Follow standard Java coding conventions
