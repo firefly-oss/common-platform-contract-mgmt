@@ -1,6 +1,5 @@
 package com.catalis.core.contract.models.entities.contract.v1;
 
-import com.catalis.core.contract.interfaces.enums.contract.v1.RoleInContractEnum;
 import com.catalis.core.contract.models.entities.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +29,7 @@ public class ContractParty extends BaseEntity {
     private Long partyId;
 
     @Column("role_in_contract")
-    private RoleInContractEnum roleInContract;
+    private Long roleInContractId;
 
     @Column("date_joined")
     private LocalDateTime dateJoined;

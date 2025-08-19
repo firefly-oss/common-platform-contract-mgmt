@@ -1,7 +1,6 @@
 package com.catalis.core.contract.models.entities.contract.v1;
 
 import com.catalis.core.contract.interfaces.enums.contract.v1.ContractStatusEnum;
-import com.catalis.core.contract.interfaces.enums.contract.v1.ContractTypeEnum;
 import com.catalis.core.contract.models.entities.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,11 +26,11 @@ public class Contract extends BaseEntity {
     @Column("contract_number")
     private String contractNumber;
 
-    @Column("product_id")
-    private Long productId;
+    @Column("product_catalog_id") // product catalog identifier
+    private Long productCatalogId;
 
-    @Column("contract_type")
-    private ContractTypeEnum contractType;
+    @Column("product_id") // product specific identifier
+    private Long productId;
 
     @Column("contract_status")
     private ContractStatusEnum contractStatus;
