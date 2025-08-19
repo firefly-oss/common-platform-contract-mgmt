@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication(
         scanBasePackages = {
@@ -44,6 +45,7 @@ import org.springframework.web.reactive.config.EnableWebFlux;
                 )
         }
 )
+@EnableCaching
 public class ContractManagementApplication {
     public static void main(String[] args) {
         SpringApplication.run(ContractManagementApplication.class, args);
