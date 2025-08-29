@@ -264,11 +264,11 @@ Environment variables commonly used:
 - dev
   - Cache: Caffeine
   - Swagger/OpenAPI: enabled
-  - Logging: com.catalis DEBUG, r2dbc DEBUG, flyway DEBUG
+  - Logging: com.firefly DEBUG, r2dbc DEBUG, flyway DEBUG
 - testing
   - Cache: Caffeine
   - Swagger/OpenAPI: enabled
-  - Logging: com.catalis DEBUG
+  - Logging: com.firefly DEBUG
 - prod
   - Cache: Redis (TTL 600s, key prefix `contract:`)
   - Swagger/OpenAPI: disabled
