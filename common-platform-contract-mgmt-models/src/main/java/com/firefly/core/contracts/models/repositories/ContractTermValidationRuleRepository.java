@@ -1,5 +1,6 @@
 package com.firefly.core.contracts.models.repositories;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.firefly.core.contracts.interfaces.enums.TermValidationTypeEnum;
 import com.firefly.core.contracts.models.entities.ContractTermValidationRule;
 import org.springframework.data.r2dbc.repository.Query;
@@ -31,9 +32,10 @@ public interface ContractTermValidationRuleRepository extends BaseRepository<Con
                                                                            TermValidationTypeEnum validationType);
 
     /**
-     * Find validation rules by validation value
+     * Find validation rules by validation value (JSON comparison)
      */
-    Flux<ContractTermValidationRule> findByValidationValue(String validationValue);
+    @Query("SELECT * FROM contract_term_validation_rule WHERE validation_value = :validationValue::jsonb")
+    Flux<ContractTermValidationRule> findByValidationValue(@Param("validationValue") JsonNode validationValue);
 
     /**
      * Count validation rules for a term template
@@ -79,4 +81,16 @@ public interface ContractTermValidationRuleRepository extends BaseRepository<Con
      */
     @Query("SELECT COUNT(*) > 0 FROM contract_term_validation_rule WHERE term_template_id = :termTemplateId")
     Mono<Boolean> existsByTermTemplateId(@Param("termTemplateId") Long termTemplateId);
+
+    /**
+     * Find validation rules that contain a specific JSON key
+     */
+    @Query("SELECT * FROM contract_term_validation_rule WHERE validation_value ? :key")
+    Flux<ContractTermValidationRule> findByValidationValueContainingKey(@Param("key") String key);
+
+    /**
+     * Find validation rules with non-null validation values
+     */
+    @Query("SELECT * FROM contract_term_validation_rule WHERE validation_value IS NOT NULL")
+    Flux<ContractTermValidationRule> findRulesWithValidationValue();
 }

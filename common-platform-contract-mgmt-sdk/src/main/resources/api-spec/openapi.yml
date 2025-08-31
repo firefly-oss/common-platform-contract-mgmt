@@ -1924,9 +1924,11 @@ components:
             - DATE_RANGE
             - CUSTOM_FUNCTION
         validationValue:
-          maxLength: 1000
-          minLength: 0
-          type: string
+          type: object
+          description: 'Validation criteria as JSON object. Examples: {"pattern": "^[A-Z]{2,10}$"} for regex, {"min": 0, "max": 100} for range, {"values": ["OPTION1", "OPTION2"]} for list'
+          example:
+            pattern: "^[A-Z]{2,10}$"
+            flags: "i"
         errorMessage:
           maxLength: 500
           minLength: 0

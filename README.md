@@ -186,7 +186,7 @@ erDiagram
         bigint validation_rule_id PK "Primary Key - Auto-generated"
         bigint term_template_id FK "Foreign Key to CONTRACT_TERM_TEMPLATE"
         term_validation_type_enum validation_type "Type of validation (REGEX, RANGE, etc.)"
-        varchar_1000 validation_value "Validation criteria value"
+        jsonb validation_value "Validation criteria as JSON object"
         varchar_500 error_message "Error message for validation failure"
         timestamp created_at "Record creation timestamp"
         timestamp updated_at "Last modification timestamp"

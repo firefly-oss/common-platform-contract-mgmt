@@ -1,5 +1,6 @@
 package com.firefly.core.contracts.models.entities;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.firefly.core.contracts.interfaces.enums.TermValidationTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +35,7 @@ public class ContractTermValidationRule {
     private TermValidationTypeEnum validationType;
 
     @Column("validation_value")
-    private String validationValue;
+    private JsonNode validationValue;
 
     @Column("error_message")
     private String errorMessage;
