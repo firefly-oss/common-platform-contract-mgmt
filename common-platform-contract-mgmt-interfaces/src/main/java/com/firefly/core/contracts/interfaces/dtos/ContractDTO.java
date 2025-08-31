@@ -37,8 +37,6 @@ public class ContractDTO {
     @ValidDateTime
     private LocalDateTime endDate;
 
-    private Long documentManagerRefId;
-
     @ValidDateTime
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;

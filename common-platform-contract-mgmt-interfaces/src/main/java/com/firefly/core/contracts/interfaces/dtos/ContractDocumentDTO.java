@@ -27,12 +27,11 @@ public class ContractDocumentDTO {
     @NotNull(message = "Contract ID is required")
     private Long contractId;
 
-    @NotNull(message = "Document type is required")
-    @Size(max = 100, message = "Document type must not exceed 100 characters")
-    private String documentType;
+    @NotNull(message = "Document type ID is required")
+    private Long documentTypeId;
 
-    @NotNull(message = "Document manager reference ID is required")
-    private Long documentManagerRefId;
+    @NotNull(message = "Document ID is required")
+    private Long documentId;
 
     @ValidDateTime
     private LocalDateTime dateAdded;

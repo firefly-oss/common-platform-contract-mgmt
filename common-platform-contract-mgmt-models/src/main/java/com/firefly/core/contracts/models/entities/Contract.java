@@ -39,9 +39,6 @@ public class Contract {
     @Column("end_date")
     private LocalDateTime endDate;
 
-    @Column("document_manager_ref_id")
-    private Long documentManagerRefId;
-
     @CreatedDate
     @Column("created_at")
     private LocalDateTime createdAt;

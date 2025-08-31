@@ -29,11 +29,11 @@ public class ContractDocument {
     @Column("contract_id")
     private Long contractId;
 
-    @Column("document_type")
-    private String documentType;
+    @Column("document_type_id")
+    private Long documentTypeId;
 
-    @Column("document_manager_ref_id")
-    private Long documentManagerRefId;
+    @Column("document_id")
+    private Long documentId;
 
     @Column("date_added")
     private LocalDateTime dateAdded;

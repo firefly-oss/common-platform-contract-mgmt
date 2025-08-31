@@ -101,7 +101,6 @@ erDiagram
         contract_status_enum contract_status "Current status (DRAFT, ACTIVE, etc.)"
         timestamp start_date "Contract effective start date"
         timestamp end_date "Contract expiration date"
-        bigint document_manager_ref_id "Reference to document management system"
         timestamp created_at "Record creation timestamp"
         timestamp updated_at "Last modification timestamp"
     }
@@ -123,8 +122,8 @@ erDiagram
     CONTRACT_DOCUMENT {
         bigint contract_document_id PK "Primary Key - Auto-generated"
         bigint contract_id FK "Foreign Key to CONTRACT"
-        varchar_100 document_type "Type of document (AGREEMENT, AMENDMENT, etc.)"
-        varchar_500 document_manager_ref "Reference to external document"
+        bigint document_type_id FK "Foreign Key to ContractDocumentType master data"
+        bigint document_id "Reference to document in document management platform"
         timestamp date_added "Date document was added"
         timestamp created_at "Record creation timestamp"
         timestamp updated_at "Last modification timestamp"
@@ -148,7 +147,6 @@ erDiagram
         event_type_enum event_type "Type of event (CREATED, SIGNED, etc.)"
         timestamp event_date "When the event occurred"
         text event_description "Detailed description of the event"
-        varchar_500 document_manager_ref "Related document reference"
         timestamp created_at "Record creation timestamp"
         timestamp updated_at "Last modification timestamp"
     }

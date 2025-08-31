@@ -1822,9 +1822,6 @@ components:
           format: date-time
         eventDescription:
           type: string
-        documentManagerRefId:
-          type: integer
-          format: int64
         createdAt:
           type: string
           format: date-time
@@ -1836,8 +1833,8 @@ components:
     ContractDocumentDTO:
       required:
         - contractId
-        - documentManagerRefId
-        - documentType
+        - documentId
+        - documentTypeId
       type: object
       properties:
         contractDocumentId:
@@ -1847,11 +1844,10 @@ components:
         contractId:
           type: integer
           format: int64
-        documentType:
-          maxLength: 100
-          minLength: 0
-          type: string
-        documentManagerRefId:
+        documentTypeId:
+          type: integer
+          format: int64
+        documentId:
           type: integer
           format: int64
         dateAdded:
@@ -1894,9 +1890,6 @@ components:
         endDate:
           type: string
           format: date-time
-        documentManagerRefId:
-          type: integer
-          format: int64
         createdAt:
           type: string
           format: date-time

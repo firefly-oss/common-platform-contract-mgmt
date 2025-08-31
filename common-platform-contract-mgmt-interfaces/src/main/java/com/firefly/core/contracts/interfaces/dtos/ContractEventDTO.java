@@ -36,8 +36,6 @@ public class ContractEventDTO {
 
     private String eventDescription;
 
-    private Long documentManagerRefId;
-
     @ValidDateTime
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;

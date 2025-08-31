@@ -21,19 +21,19 @@ public interface ContractDocumentRepository extends BaseRepository<ContractDocum
     Flux<ContractDocument> findByContractId(Long contractId);
 
     /**
-     * Find documents by document type
+     * Find documents by document type ID
      */
-    Flux<ContractDocument> findByDocumentType(String documentType);
+    Flux<ContractDocument> findByDocumentTypeId(Long documentTypeId);
 
     /**
-     * Find documents by contract ID and document type
+     * Find documents by contract ID and document type ID
      */
-    Flux<ContractDocument> findByContractIdAndDocumentType(Long contractId, String documentType);
+    Flux<ContractDocument> findByContractIdAndDocumentTypeId(Long contractId, Long documentTypeId);
 
     /**
-     * Find document by document manager reference ID
+     * Find document by document ID
      */
-    Mono<ContractDocument> findByDocumentManagerRefId(Long documentManagerRefId);
+    Mono<ContractDocument> findByDocumentId(Long documentId);
 
     /**
      * Find documents added after a specific date

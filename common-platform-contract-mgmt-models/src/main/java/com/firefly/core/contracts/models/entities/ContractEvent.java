@@ -39,9 +39,6 @@ public class ContractEvent {
     @Column("event_description")
     private String eventDescription;
 
-    @Column("document_manager_ref_id")
-    private Long documentManagerRefId;
-
     @CreatedDate
     @Column("created_at")
     private LocalDateTime createdAt;

@@ -76,10 +76,4 @@ public interface ContractEventRepository extends BaseRepository<ContractEvent, L
      */
     @Query("SELECT * FROM contract_event WHERE contract_id = :contractId ORDER BY event_date DESC LIMIT 1")
     Mono<ContractEvent> findLatestEventByContractId(@Param("contractId") Long contractId);
-
-    /**
-     * Find events with document references
-     */
-    @Query("SELECT * FROM contract_event WHERE document_manager_ref_id IS NOT NULL")
-    Flux<ContractEvent> findEventsWithDocuments();
 }
