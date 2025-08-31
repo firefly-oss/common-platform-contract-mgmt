@@ -1,0 +1,89 @@
+package com.firefly.core.contracts.models.repositories;
+
+import com.firefly.core.contracts.interfaces.enums.RiskLevelEnum;
+import com.firefly.core.contracts.models.entities.ContractRiskAssessment;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+/**
+ * Repository interface for ContractRiskAssessment entity operations
+ */
+@Repository
+public interface ContractRiskAssessmentRepository extends BaseRepository<ContractRiskAssessment, Long> {
+
+    /**
+     * Find risk assessments by contract ID
+     */
+    Flux<ContractRiskAssessment> findByContractId(Long contractId);
+
+    /**
+     * Find risk assessments by contract ID ordered by assessment date
+     */
+    Flux<ContractRiskAssessment> findByContractIdOrderByAssessmentDateDesc(Long contractId);
+
+    /**
+     * Find risk assessments by risk level
+     */
+    Flux<ContractRiskAssessment> findByRiskLevel(RiskLevelEnum riskLevel);
+
+    /**
+     * Find risk assessments by assessor
+     */
+    Flux<ContractRiskAssessment> findByAssessor(String assessor);
+
+    /**
+     * Find latest risk assessment for a contract
+     */
+    @Query("SELECT * FROM contract_risk_assessment WHERE contract_id = :contractId ORDER BY assessment_date DESC LIMIT 1")
+    Mono<ContractRiskAssessment> findLatestByContractId(@Param("contractId") Long contractId);
+
+    /**
+     * Find risk assessments within a date range
+     */
+    Flux<ContractRiskAssessment> findByAssessmentDateBetween(LocalDateTime fromDate, LocalDateTime toDate);
+
+    /**
+     * Find risk assessments with score above threshold
+     */
+    @Query("SELECT * FROM contract_risk_assessment WHERE risk_score >= :threshold")
+    Flux<ContractRiskAssessment> findByRiskScoreGreaterThanEqual(@Param("threshold") BigDecimal threshold);
+
+    /**
+     * Find risk assessments with score below threshold
+     */
+    @Query("SELECT * FROM contract_risk_assessment WHERE risk_score <= :threshold")
+    Flux<ContractRiskAssessment> findByRiskScoreLessThanEqual(@Param("threshold") BigDecimal threshold);
+
+    /**
+     * Find high-risk contracts (CRITICAL or HIGH risk level)
+     */
+    @Query("SELECT * FROM contract_risk_assessment WHERE risk_level IN ('CRITICAL', 'HIGH')")
+    Flux<ContractRiskAssessment> findHighRiskAssessments();
+
+    /**
+     * Count assessments by risk level
+     */
+    Mono<Long> countByRiskLevel(RiskLevelEnum riskLevel);
+
+    /**
+     * Count assessments for a contract
+     */
+    Mono<Long> countByContractId(Long contractId);
+
+    /**
+     * Find assessments by contract and risk level
+     */
+    Flux<ContractRiskAssessment> findByContractIdAndRiskLevel(Long contractId, RiskLevelEnum riskLevel);
+
+    /**
+     * Find recent assessments across all contracts
+     */
+    @Query("SELECT * FROM contract_risk_assessment ORDER BY assessment_date DESC LIMIT :limit")
+    Flux<ContractRiskAssessment> findRecentAssessments(@Param("limit") Integer limit);
+}

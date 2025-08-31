@@ -1,0 +1,69 @@
+package com.firefly.core.contracts.models.entities;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.firefly.core.contracts.interfaces.enums.TermCategoryEnum;
+import com.firefly.core.contracts.interfaces.enums.TermDataTypeEnum;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
+
+import java.time.LocalDateTime;
+
+/**
+ * Contract term template entity representing templates for dynamic contract terms
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table("contract_term_template")
+public class ContractTermTemplate {
+
+    @Id
+    @Column("term_template_id")
+    private Long termTemplateId;
+
+    @Column("code")
+    private String code;
+
+    @Column("name")
+    private String name;
+
+    @Column("description")
+    private String description;
+
+    @Column("term_category")
+    private TermCategoryEnum termCategory;
+
+    @Column("data_type")
+    private TermDataTypeEnum dataType;
+
+    @Column("is_required")
+    private Boolean isRequired;
+
+    @Column("is_active")
+    private Boolean isActive;
+
+    @Column("default_value")
+    private String defaultValue;
+
+    @Column("validation_rules")
+    private JsonNode validationRules;
+
+    @Column("metadata")
+    private JsonNode metadata;
+
+    @CreatedDate
+    @Column("created_at")
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column("updated_at")
+    private LocalDateTime updatedAt;
+}
