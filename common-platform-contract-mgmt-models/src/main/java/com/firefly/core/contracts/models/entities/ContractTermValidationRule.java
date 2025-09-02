@@ -13,6 +13,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract term validation rule entity representing validation rules for contract term templates
@@ -26,10 +27,10 @@ public class ContractTermValidationRule {
 
     @Id
     @Column("validation_rule_id")
-    private Long validationRuleId;
+    private UUID validationRuleId;
 
     @Column("term_template_id")
-    private Long termTemplateId;
+    private UUID termTemplateId;
 
     @Column("validation_type")
     private TermValidationTypeEnum validationType;

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ContractRiskAssessmentServiceImpl implements ContractRiskAssessment
     }
 
     @Override
-    public Mono<ContractRiskAssessmentDTO> updateContractRiskAssessment(Long contractRiskAssessmentId, ContractRiskAssessmentDTO contractRiskAssessmentDTO) {
+    public Mono<ContractRiskAssessmentDTO> updateContractRiskAssessment(UUID contractRiskAssessmentId, ContractRiskAssessmentDTO contractRiskAssessmentDTO) {
         return repository.findById(contractRiskAssessmentId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract risk assessment not found with ID: " + contractRiskAssessmentId)))
                 .flatMap(existingAssessment -> {
@@ -54,14 +55,14 @@ public class ContractRiskAssessmentServiceImpl implements ContractRiskAssessment
     }
 
     @Override
-    public Mono<Void> deleteContractRiskAssessment(Long contractRiskAssessmentId) {
+    public Mono<Void> deleteContractRiskAssessment(UUID contractRiskAssessmentId) {
         return repository.findById(contractRiskAssessmentId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract risk assessment not found with ID: " + contractRiskAssessmentId)))
                 .flatMap(assessment -> repository.deleteById(contractRiskAssessmentId));
     }
 
     @Override
-    public Mono<ContractRiskAssessmentDTO> getContractRiskAssessmentById(Long contractRiskAssessmentId) {
+    public Mono<ContractRiskAssessmentDTO> getContractRiskAssessmentById(UUID contractRiskAssessmentId) {
         return repository.findById(contractRiskAssessmentId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract risk assessment not found with ID: " + contractRiskAssessmentId)))
                 .map(mapper::toDTO);

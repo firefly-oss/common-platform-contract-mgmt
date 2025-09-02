@@ -12,6 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract entity representing the main contract table
@@ -25,7 +26,7 @@ public class Contract {
 
     @Id
     @Column("contract_id")
-    private Long contractId;
+    private UUID contractId;
 
     @Column("contract_number")
     private String contractNumber;

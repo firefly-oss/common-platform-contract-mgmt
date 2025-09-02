@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract party DTO for API operations - compatible with R2DBC ContractParty entity
@@ -21,16 +22,16 @@ import java.time.LocalDateTime;
 public class ContractPartyDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long contractPartyId;
+    private UUID contractPartyId;
 
     @NotNull(message = "Contract ID is required")
-    private Long contractId;
+    private UUID contractId;
 
     @NotNull(message = "Party ID is required")
-    private Long partyId;
+    private UUID partyId;
 
     @NotNull(message = "Role in contract ID is required")
-    private Long roleInContractId;
+    private UUID roleInContractId;
 
     @ValidDateTime
     private LocalDateTime dateJoined;

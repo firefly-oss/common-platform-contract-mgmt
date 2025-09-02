@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ContractTermDynamicServiceImpl implements ContractTermDynamicServic
     }
 
     @Override
-    public Mono<ContractTermDynamicDTO> updateContractTermDynamic(Long termId, ContractTermDynamicDTO contractTermDynamicDTO) {
+    public Mono<ContractTermDynamicDTO> updateContractTermDynamic(UUID termId, ContractTermDynamicDTO contractTermDynamicDTO) {
         return repository.findById(termId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term dynamic not found with ID: " + termId)))
                 .flatMap(existingTerm -> {
@@ -54,14 +55,14 @@ public class ContractTermDynamicServiceImpl implements ContractTermDynamicServic
     }
 
     @Override
-    public Mono<Void> deleteContractTermDynamic(Long termId) {
+    public Mono<Void> deleteContractTermDynamic(UUID termId) {
         return repository.findById(termId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term dynamic not found with ID: " + termId)))
                 .flatMap(term -> repository.deleteById(termId));
     }
 
     @Override
-    public Mono<ContractTermDynamicDTO> getContractTermDynamicById(Long termId) {
+    public Mono<ContractTermDynamicDTO> getContractTermDynamicById(UUID termId) {
         return repository.findById(termId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term dynamic not found with ID: " + termId)))
                 .map(mapper::toDTO);

@@ -11,6 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract party entity representing parties linked to a contract
@@ -24,16 +25,16 @@ public class ContractParty {
 
     @Id
     @Column("contract_party_id")
-    private Long contractPartyId;
+    private UUID contractPartyId;
 
     @Column("contract_id")
-    private Long contractId;
+    private UUID contractId;
 
     @Column("party_id")
-    private Long partyId;
+    private UUID partyId;
 
     @Column("role_in_contract_id")
-    private Long roleInContractId;
+    private UUID roleInContractId;
 
     @Column("date_joined")
     private LocalDateTime dateJoined;

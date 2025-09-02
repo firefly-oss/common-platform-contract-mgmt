@@ -9,45 +9,46 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Repository interface for ContractTermDynamic entity operations
  */
 @Repository
-public interface ContractTermDynamicRepository extends BaseRepository<ContractTermDynamic, Long> {
+public interface ContractTermDynamicRepository extends BaseRepository<ContractTermDynamic, UUID> {
 
     /**
      * Find dynamic terms by contract ID
      */
-    Flux<ContractTermDynamic> findByContractId(Long contractId);
+    Flux<ContractTermDynamic> findByContractId(UUID contractId);
 
     /**
      * Find dynamic terms by term template ID
      */
-    Flux<ContractTermDynamic> findByTermTemplateId(Long termTemplateId);
+    Flux<ContractTermDynamic> findByTermTemplateId(UUID termTemplateId);
 
     /**
      * Find active dynamic terms by contract ID
      */
-    Flux<ContractTermDynamic> findByContractIdAndIsActive(Long contractId, Boolean isActive);
+    Flux<ContractTermDynamic> findByContractIdAndIsActive(UUID contractId, Boolean isActive);
 
     /**
      * Find dynamic terms by contract ID and term template ID
      */
-    Flux<ContractTermDynamic> findByContractIdAndTermTemplateId(Long contractId, Long termTemplateId);
+    Flux<ContractTermDynamic> findByContractIdAndTermTemplateId(UUID contractId, UUID termTemplateId);
 
     /**
      * Find active dynamic terms by contract ID and term template ID
      */
-    Flux<ContractTermDynamic> findByContractIdAndTermTemplateIdAndIsActive(Long contractId, 
-                                                                           Long termTemplateId, 
+    Flux<ContractTermDynamic> findByContractIdAndTermTemplateIdAndIsActive(UUID contractId, 
+                                                                           UUID termTemplateId, 
                                                                            Boolean isActive);
 
     /**
      * Find dynamic terms effective at a specific date
      */
     @Query("SELECT * FROM contract_term_dynamic WHERE contract_id = :contractId AND effective_date <= :date AND (expiration_date IS NULL OR expiration_date >= :date) AND is_active = true")
-    Flux<ContractTermDynamic> findEffectiveTermsByContractIdAndDate(@Param("contractId") Long contractId, 
+    Flux<ContractTermDynamic> findEffectiveTermsByContractIdAndDate(@Param("contractId") UUID contractId, 
                                                                     @Param("date") LocalDateTime date);
 
     /**
@@ -93,8 +94,8 @@ public interface ContractTermDynamicRepository extends BaseRepository<ContractTe
      * Find latest term for a contract and template
      */
     @Query("SELECT * FROM contract_term_dynamic WHERE contract_id = :contractId AND term_template_id = :termTemplateId ORDER BY effective_date DESC LIMIT 1")
-    Mono<ContractTermDynamic> findLatestByContractIdAndTermTemplateId(@Param("contractId") Long contractId, 
-                                                                      @Param("termTemplateId") Long termTemplateId);
+    Mono<ContractTermDynamic> findLatestByContractIdAndTermTemplateId(@Param("contractId") UUID contractId, 
+                                                                      @Param("termTemplateId") UUID termTemplateId);
 
     /**
      * Find terms effective within a date range

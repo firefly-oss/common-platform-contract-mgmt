@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/contracts/{contractId}/risk-assessments")
@@ -40,7 +41,7 @@ public class ContractRiskAssessmentController {
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<PaginationResponse<ContractRiskAssessmentDTO>>> filterContractRiskAssessments(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody FilterRequest<ContractRiskAssessmentDTO> filterRequest) {
         return ResponseEntity.ok(contractRiskAssessmentService.filterContractRiskAssessments(filterRequest));
     }
@@ -60,7 +61,7 @@ public class ContractRiskAssessmentController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractRiskAssessmentDTO>> createContractRiskAssessment(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody ContractRiskAssessmentDTO contractRiskAssessmentDTO) {
         // Ensure the contractId in the path is used
         contractRiskAssessmentDTO.setContractId(contractId);
@@ -81,9 +82,9 @@ public class ContractRiskAssessmentController {
     @GetMapping(value = "/{contractRiskAssessmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractRiskAssessmentDTO>> getContractRiskAssessmentById(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract risk assessment to retrieve", required = true)
-            @PathVariable Long contractRiskAssessmentId) {
+            @PathVariable UUID contractRiskAssessmentId) {
         return ResponseEntity.ok(contractRiskAssessmentService.getContractRiskAssessmentById(contractRiskAssessmentId)
                 .filter(assessment -> assessment.getContractId().equals(contractId)));
     }
@@ -103,9 +104,9 @@ public class ContractRiskAssessmentController {
     @PutMapping(value = "/{contractRiskAssessmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractRiskAssessmentDTO>> updateContractRiskAssessment(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract risk assessment to update", required = true)
-            @PathVariable Long contractRiskAssessmentId,
+            @PathVariable UUID contractRiskAssessmentId,
             @Valid @RequestBody ContractRiskAssessmentDTO contractRiskAssessmentDTO) {
         // Ensure the contractId in the path is used
         contractRiskAssessmentDTO.setContractId(contractId);
@@ -124,9 +125,9 @@ public class ContractRiskAssessmentController {
     @DeleteMapping("/{contractRiskAssessmentId}")
     public Mono<ResponseEntity<Void>> deleteContractRiskAssessment(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract risk assessment to delete", required = true)
-            @PathVariable Long contractRiskAssessmentId) {
+            @PathVariable UUID contractRiskAssessmentId) {
         return contractRiskAssessmentService.getContractRiskAssessmentById(contractRiskAssessmentId)
                 .filter(assessment -> assessment.getContractId().equals(contractId))
                 .flatMap(assessment -> contractRiskAssessmentService.deleteContractRiskAssessment(contractRiskAssessmentId))

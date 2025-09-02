@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract term template DTO for API operations - compatible with R2DBC ContractTermTemplate entity
@@ -26,7 +27,7 @@ import java.time.LocalDateTime;
 public class ContractTermTemplateDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long termTemplateId;
+    private UUID termTemplateId;
 
     @NotBlank(message = "Code is required")
     @Size(max = 100, message = "Code must not exceed 100 characters")

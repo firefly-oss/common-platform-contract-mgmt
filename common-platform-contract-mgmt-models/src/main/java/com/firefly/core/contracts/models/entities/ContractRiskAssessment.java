@@ -13,6 +13,7 @@ import org.springframework.data.relational.core.mapping.Column;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract risk assessment entity representing risk evaluations for contracts
@@ -26,10 +27,10 @@ public class ContractRiskAssessment {
 
     @Id
     @Column("contract_risk_assessment_id")
-    private Long contractRiskAssessmentId;
+    private UUID contractRiskAssessmentId;
 
     @Column("contract_id")
-    private Long contractId;
+    private UUID contractId;
 
     @Column("risk_score")
     private BigDecimal riskScore;

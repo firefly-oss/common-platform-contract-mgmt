@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/contracts/{contractId}/terms")
@@ -40,7 +41,7 @@ public class ContractTermDynamicController {
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<PaginationResponse<ContractTermDynamicDTO>>> filterContractTerms(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody FilterRequest<ContractTermDynamicDTO> filterRequest) {
         return ResponseEntity.ok(contractTermDynamicService.filterContractTermDynamics(filterRequest));
     }
@@ -60,7 +61,7 @@ public class ContractTermDynamicController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractTermDynamicDTO>> createContractTerm(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody ContractTermDynamicDTO contractTermDynamicDTO) {
         // Ensure the contractId in the path is used
         contractTermDynamicDTO.setContractId(contractId);
@@ -81,9 +82,9 @@ public class ContractTermDynamicController {
     @GetMapping(value = "/{termId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractTermDynamicDTO>> getContractTermById(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract term to retrieve", required = true)
-            @PathVariable Long termId) {
+            @PathVariable UUID termId) {
         return ResponseEntity.ok(contractTermDynamicService.getContractTermDynamicById(termId)
                 .filter(term -> term.getContractId().equals(contractId)));
     }
@@ -103,9 +104,9 @@ public class ContractTermDynamicController {
     @PutMapping(value = "/{termId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractTermDynamicDTO>> updateContractTerm(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract term to update", required = true)
-            @PathVariable Long termId,
+            @PathVariable UUID termId,
             @Valid @RequestBody ContractTermDynamicDTO contractTermDynamicDTO) {
         // Ensure the contractId in the path is used
         contractTermDynamicDTO.setContractId(contractId);
@@ -124,9 +125,9 @@ public class ContractTermDynamicController {
     @DeleteMapping("/{termId}")
     public Mono<ResponseEntity<Void>> deleteContractTerm(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract term to delete", required = true)
-            @PathVariable Long termId) {
+            @PathVariable UUID termId) {
         return contractTermDynamicService.getContractTermDynamicById(termId)
                 .filter(term -> term.getContractId().equals(contractId))
                 .flatMap(term -> contractTermDynamicService.deleteContractTermDynamic(termId))

@@ -14,6 +14,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract term template entity representing templates for dynamic contract terms
@@ -27,7 +28,7 @@ public class ContractTermTemplate {
 
     @Id
     @Column("term_template_id")
-    private Long termTemplateId;
+    private UUID termTemplateId;
 
     @Column("code")
     private String code;

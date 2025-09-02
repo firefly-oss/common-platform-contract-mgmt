@@ -8,12 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Repository interface for ContractTermTemplate entity operations
  */
 @Repository
-public interface ContractTermTemplateRepository extends BaseRepository<ContractTermTemplate, Long> {
+public interface ContractTermTemplateRepository extends BaseRepository<ContractTermTemplate, UUID> {
 
     /**
      * Find template by code

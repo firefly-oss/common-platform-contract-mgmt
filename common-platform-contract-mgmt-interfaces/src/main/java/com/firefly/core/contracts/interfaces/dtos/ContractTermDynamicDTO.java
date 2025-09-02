@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract term dynamic DTO for API operations - compatible with R2DBC ContractTermDynamic entity
@@ -23,13 +24,13 @@ import java.time.LocalDateTime;
 public class ContractTermDynamicDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long termId;
+    private UUID termId;
 
     @NotNull(message = "Contract ID is required")
-    private Long contractId;
+    private UUID contractId;
 
     @NotNull(message = "Term template ID is required")
-    private Long termTemplateId;
+    private UUID termTemplateId;
 
     private String termValueText;
 

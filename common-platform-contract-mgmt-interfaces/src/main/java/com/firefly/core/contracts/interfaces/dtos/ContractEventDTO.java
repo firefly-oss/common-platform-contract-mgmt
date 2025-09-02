@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract event DTO for API operations - compatible with R2DBC ContractEvent entity
@@ -22,10 +23,10 @@ import java.time.LocalDateTime;
 public class ContractEventDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long contractEventId;
+    private UUID contractEventId;
 
     @NotNull(message = "Contract ID is required")
-    private Long contractId;
+    private UUID contractId;
 
     @NotNull(message = "Event type is required")
     private EventTypeEnum eventType;

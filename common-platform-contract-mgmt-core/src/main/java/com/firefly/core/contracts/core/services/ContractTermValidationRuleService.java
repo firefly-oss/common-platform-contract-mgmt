@@ -4,6 +4,7 @@ import com.firefly.common.core.filters.FilterRequest;
 import com.firefly.common.core.queries.PaginationResponse;
 import com.firefly.core.contracts.interfaces.dtos.ContractTermValidationRuleDTO;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Service interface for managing contract term validation rules.
@@ -32,7 +33,7 @@ public interface ContractTermValidationRuleService {
      * @param contractTermValidationRuleDTO the data transfer object containing the updated details of the contract term validation rule
      * @return a reactive Mono containing the updated ContractTermValidationRuleDTO
      */
-    Mono<ContractTermValidationRuleDTO> updateContractTermValidationRule(Long validationRuleId, ContractTermValidationRuleDTO contractTermValidationRuleDTO);
+    Mono<ContractTermValidationRuleDTO> updateContractTermValidationRule(UUID validationRuleId, ContractTermValidationRuleDTO contractTermValidationRuleDTO);
     
     /**
      * Deletes a contract term validation rule identified by its unique ID.
@@ -40,7 +41,7 @@ public interface ContractTermValidationRuleService {
      * @param validationRuleId the unique identifier of the contract term validation rule to be deleted
      * @return a Mono that completes when the contract term validation rule is successfully deleted or errors if the deletion fails
      */
-    Mono<Void> deleteContractTermValidationRule(Long validationRuleId);
+    Mono<Void> deleteContractTermValidationRule(UUID validationRuleId);
     
     /**
      * Retrieves a contract term validation rule by its unique identifier.
@@ -49,5 +50,5 @@ public interface ContractTermValidationRuleService {
      * @return a Mono emitting the {@link ContractTermValidationRuleDTO} representing the contract term validation rule if found,
      *         or an empty Mono if the contract term validation rule does not exist
      */
-    Mono<ContractTermValidationRuleDTO> getContractTermValidationRuleById(Long validationRuleId);
+    Mono<ContractTermValidationRuleDTO> getContractTermValidationRuleById(UUID validationRuleId);
 }

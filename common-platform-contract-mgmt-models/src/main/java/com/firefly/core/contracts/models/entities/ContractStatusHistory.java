@@ -12,6 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract status history entity representing the status timeline of a contract
@@ -25,10 +26,10 @@ public class ContractStatusHistory {
 
     @Id
     @Column("contract_status_history_id")
-    private Long contractStatusHistoryId;
+    private UUID contractStatusHistoryId;
 
     @Column("contract_id")
-    private Long contractId;
+    private UUID contractId;
 
     @Column("status_code")
     private StatusCodeEnum statusCode;

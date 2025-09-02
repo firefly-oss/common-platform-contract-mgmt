@@ -4,6 +4,7 @@ import com.firefly.common.core.filters.FilterRequest;
 import com.firefly.common.core.queries.PaginationResponse;
 import com.firefly.core.contracts.interfaces.dtos.ContractDTO;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Service interface for managing contracts.
@@ -32,7 +33,7 @@ public interface ContractService {
      * @param contractDTO the data transfer object containing the updated details of the contract
      * @return a reactive Mono containing the updated ContractDTO
      */
-    Mono<ContractDTO> updateContract(Long contractId, ContractDTO contractDTO);
+    Mono<ContractDTO> updateContract(UUID contractId, ContractDTO contractDTO);
     
     /**
      * Deletes a contract identified by its unique ID.
@@ -40,7 +41,7 @@ public interface ContractService {
      * @param contractId the unique identifier of the contract to be deleted
      * @return a Mono that completes when the contract is successfully deleted or errors if the deletion fails
      */
-    Mono<Void> deleteContract(Long contractId);
+    Mono<Void> deleteContract(UUID contractId);
     
     /**
      * Retrieves a contract by its unique identifier.
@@ -49,5 +50,5 @@ public interface ContractService {
      * @return a Mono emitting the {@link ContractDTO} representing the contract if found,
      *         or an empty Mono if the contract does not exist
      */
-    Mono<ContractDTO> getContractById(Long contractId);
+    Mono<ContractDTO> getContractById(UUID contractId);
 }

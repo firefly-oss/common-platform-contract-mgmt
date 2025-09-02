@@ -8,17 +8,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Repository interface for ContractTermValidationRule entity operations
  */
 @Repository
-public interface ContractTermValidationRuleRepository extends BaseRepository<ContractTermValidationRule, Long> {
+public interface ContractTermValidationRuleRepository extends BaseRepository<ContractTermValidationRule, UUID> {
 
     /**
      * Find validation rules by term template ID
      */
-    Flux<ContractTermValidationRule> findByTermTemplateId(Long termTemplateId);
+    Flux<ContractTermValidationRule> findByTermTemplateId(UUID termTemplateId);
 
     /**
      * Find validation rules by validation type
@@ -28,7 +29,7 @@ public interface ContractTermValidationRuleRepository extends BaseRepository<Con
     /**
      * Find validation rules by term template ID and validation type
      */
-    Flux<ContractTermValidationRule> findByTermTemplateIdAndValidationType(Long termTemplateId, 
+    Flux<ContractTermValidationRule> findByTermTemplateIdAndValidationType(UUID termTemplateId, 
                                                                            TermValidationTypeEnum validationType);
 
     /**
@@ -62,13 +63,13 @@ public interface ContractTermValidationRuleRepository extends BaseRepository<Con
     /**
      * Find validation rules by term template ID ordered by validation type
      */
-    Flux<ContractTermValidationRule> findByTermTemplateIdOrderByValidationType(Long termTemplateId);
+    Flux<ContractTermValidationRule> findByTermTemplateIdOrderByValidationType(UUID termTemplateId);
 
     /**
      * Delete validation rules by term template ID
      */
     @Query("DELETE FROM contract_term_validation_rule WHERE term_template_id = :termTemplateId")
-    Mono<Void> deleteByTermTemplateId(@Param("termTemplateId") Long termTemplateId);
+    Mono<Void> deleteByTermTemplateId(@Param("termTemplateId") UUID termTemplateId);
 
     /**
      * Find validation rules for multiple term templates
@@ -80,7 +81,7 @@ public interface ContractTermValidationRuleRepository extends BaseRepository<Con
      * Check if term template has validation rules
      */
     @Query("SELECT COUNT(*) > 0 FROM contract_term_validation_rule WHERE term_template_id = :termTemplateId")
-    Mono<Boolean> existsByTermTemplateId(@Param("termTemplateId") Long termTemplateId);
+    Mono<Boolean> existsByTermTemplateId(@Param("termTemplateId") UUID termTemplateId);
 
     /**
      * Find validation rules that contain a specific JSON key

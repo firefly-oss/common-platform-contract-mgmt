@@ -13,6 +13,7 @@ import org.springframework.data.relational.core.mapping.Column;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract term dynamic entity representing dynamic/parameterized terms for contracts
@@ -26,13 +27,13 @@ public class ContractTermDynamic {
 
     @Id
     @Column("term_id")
-    private Long termId;
+    private UUID termId;
 
     @Column("contract_id")
-    private Long contractId;
+    private UUID contractId;
 
     @Column("term_template_id")
-    private Long termTemplateId;
+    private UUID termTemplateId;
 
     @Column("term_value_text")
     private String termValueText;

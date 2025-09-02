@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Mono<ContractDTO> updateContract(Long contractId, ContractDTO contractDTO) {
+    public Mono<ContractDTO> updateContract(UUID contractId, ContractDTO contractDTO) {
         return repository.findById(contractId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract not found with ID: " + contractId)))
                 .flatMap(existingContract -> {
@@ -54,14 +55,14 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Mono<Void> deleteContract(Long contractId) {
+    public Mono<Void> deleteContract(UUID contractId) {
         return repository.findById(contractId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract not found with ID: " + contractId)))
                 .flatMap(contract -> repository.deleteById(contractId));
     }
 
     @Override
-    public Mono<ContractDTO> getContractById(Long contractId) {
+    public Mono<ContractDTO> getContractById(UUID contractId) {
         return repository.findById(contractId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract not found with ID: " + contractId)))
                 .map(mapper::toDTO);

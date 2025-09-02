@@ -4,6 +4,7 @@ import com.firefly.common.core.filters.FilterRequest;
 import com.firefly.common.core.queries.PaginationResponse;
 import com.firefly.core.contracts.interfaces.dtos.ContractPartyDTO;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Service interface for managing contract parties.
@@ -32,7 +33,7 @@ public interface ContractPartyService {
      * @param contractPartyDTO the data transfer object containing the updated details of the contract party
      * @return a reactive Mono containing the updated ContractPartyDTO
      */
-    Mono<ContractPartyDTO> updateContractParty(Long contractPartyId, ContractPartyDTO contractPartyDTO);
+    Mono<ContractPartyDTO> updateContractParty(UUID contractPartyId, ContractPartyDTO contractPartyDTO);
     
     /**
      * Deletes a contract party identified by its unique ID.
@@ -40,7 +41,7 @@ public interface ContractPartyService {
      * @param contractPartyId the unique identifier of the contract party to be deleted
      * @return a Mono that completes when the contract party is successfully deleted or errors if the deletion fails
      */
-    Mono<Void> deleteContractParty(Long contractPartyId);
+    Mono<Void> deleteContractParty(UUID contractPartyId);
     
     /**
      * Retrieves a contract party by its unique identifier.
@@ -49,5 +50,5 @@ public interface ContractPartyService {
      * @return a Mono emitting the {@link ContractPartyDTO} representing the contract party if found,
      *         or an empty Mono if the contract party does not exist
      */
-    Mono<ContractPartyDTO> getContractPartyById(Long contractPartyId);
+    Mono<ContractPartyDTO> getContractPartyById(UUID contractPartyId);
 }

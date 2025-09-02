@@ -10,22 +10,23 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Repository interface for ContractRiskAssessment entity operations
  */
 @Repository
-public interface ContractRiskAssessmentRepository extends BaseRepository<ContractRiskAssessment, Long> {
+public interface ContractRiskAssessmentRepository extends BaseRepository<ContractRiskAssessment, UUID> {
 
     /**
      * Find risk assessments by contract ID
      */
-    Flux<ContractRiskAssessment> findByContractId(Long contractId);
+    Flux<ContractRiskAssessment> findByContractId(UUID contractId);
 
     /**
      * Find risk assessments by contract ID ordered by assessment date
      */
-    Flux<ContractRiskAssessment> findByContractIdOrderByAssessmentDateDesc(Long contractId);
+    Flux<ContractRiskAssessment> findByContractIdOrderByAssessmentDateDesc(UUID contractId);
 
     /**
      * Find risk assessments by risk level
@@ -41,7 +42,7 @@ public interface ContractRiskAssessmentRepository extends BaseRepository<Contrac
      * Find latest risk assessment for a contract
      */
     @Query("SELECT * FROM contract_risk_assessment WHERE contract_id = :contractId ORDER BY assessment_date DESC LIMIT 1")
-    Mono<ContractRiskAssessment> findLatestByContractId(@Param("contractId") Long contractId);
+    Mono<ContractRiskAssessment> findLatestByContractId(@Param("contractId") UUID contractId);
 
     /**
      * Find risk assessments within a date range
@@ -79,7 +80,7 @@ public interface ContractRiskAssessmentRepository extends BaseRepository<Contrac
     /**
      * Find assessments by contract and risk level
      */
-    Flux<ContractRiskAssessment> findByContractIdAndRiskLevel(Long contractId, RiskLevelEnum riskLevel);
+    Flux<ContractRiskAssessment> findByContractIdAndRiskLevel(UUID contractId, RiskLevelEnum riskLevel);
 
     /**
      * Find recent assessments across all contracts

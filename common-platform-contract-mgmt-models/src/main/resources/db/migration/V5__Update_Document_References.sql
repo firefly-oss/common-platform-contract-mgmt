@@ -9,9 +9,9 @@ ALTER TABLE contract
 -- Update contract_document table: rename document_manager_ref_id to document_id and change document_type to document_type_id
 ALTER TABLE contract_document 
     DROP COLUMN IF EXISTS document_manager_ref_id,
-    ADD COLUMN document_id BIGINT,
+    ADD COLUMN document_id UUID,
     DROP COLUMN IF EXISTS document_type,
-    ADD COLUMN document_type_id BIGINT NOT NULL DEFAULT 1;
+    ADD COLUMN document_type_id UUID NOT NULL DEFAULT 1;
 
 -- Update contract_event table: remove document_manager_ref_id (no longer needed)
 ALTER TABLE contract_event

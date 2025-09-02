@@ -8,32 +8,33 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Repository interface for ContractDocument entity operations
  */
 @Repository
-public interface ContractDocumentRepository extends BaseRepository<ContractDocument, Long> {
+public interface ContractDocumentRepository extends BaseRepository<ContractDocument, UUID> {
 
     /**
      * Find documents by contract ID
      */
-    Flux<ContractDocument> findByContractId(Long contractId);
+    Flux<ContractDocument> findByContractId(UUID contractId);
 
     /**
      * Find documents by document type ID
      */
-    Flux<ContractDocument> findByDocumentTypeId(Long documentTypeId);
+    Flux<ContractDocument> findByDocumentTypeId(UUID documentTypeId);
 
     /**
      * Find documents by contract ID and document type ID
      */
-    Flux<ContractDocument> findByContractIdAndDocumentTypeId(Long contractId, Long documentTypeId);
+    Flux<ContractDocument> findByContractIdAndDocumentTypeId(UUID contractId, UUID documentTypeId);
 
     /**
      * Find document by document ID
      */
-    Mono<ContractDocument> findByDocumentId(Long documentId);
+    Mono<ContractDocument> findByDocumentId(UUID documentId);
 
     /**
      * Find documents added after a specific date
@@ -61,6 +62,6 @@ public interface ContractDocumentRepository extends BaseRepository<ContractDocum
      * Find latest documents for a contract
      */
     @Query("SELECT * FROM contract_document WHERE contract_id = :contractId ORDER BY date_added DESC LIMIT :limit")
-    Flux<ContractDocument> findLatestByContractId(@Param("contractId") Long contractId, 
+    Flux<ContractDocument> findLatestByContractId(@Param("contractId") UUID contractId, 
                                                   @Param("limit") Integer limit);
 }

@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract status history DTO for API operations - compatible with R2DBC ContractStatusHistory entity
@@ -23,10 +24,10 @@ import java.time.LocalDateTime;
 public class ContractStatusHistoryDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long contractStatusHistoryId;
+    private UUID contractStatusHistoryId;
 
     @NotNull(message = "Contract ID is required")
-    private Long contractId;
+    private UUID contractId;
 
     @NotNull(message = "Status code is required")
     private StatusCodeEnum statusCode;

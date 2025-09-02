@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/contract-term-templates")
@@ -73,7 +74,7 @@ public class ContractTermTemplateController {
     @GetMapping(value = "/{termTemplateId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractTermTemplateDTO>> getContractTermTemplateById(
             @Parameter(description = "ID of the contract term template to retrieve", required = true)
-            @PathVariable Long termTemplateId) {
+            @PathVariable UUID termTemplateId) {
         return ResponseEntity.ok(contractTermTemplateService.getContractTermTemplateById(termTemplateId));
     }
 
@@ -92,7 +93,7 @@ public class ContractTermTemplateController {
     @PutMapping(value = "/{termTemplateId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractTermTemplateDTO>> updateContractTermTemplate(
             @Parameter(description = "ID of the contract term template to update", required = true)
-            @PathVariable Long termTemplateId,
+            @PathVariable UUID termTemplateId,
             @Valid @RequestBody ContractTermTemplateDTO contractTermTemplateDTO) {
         return ResponseEntity.ok(contractTermTemplateService.updateContractTermTemplate(termTemplateId, contractTermTemplateDTO));
     }
@@ -109,7 +110,7 @@ public class ContractTermTemplateController {
     @DeleteMapping("/{termTemplateId}")
     public Mono<ResponseEntity<Void>> deleteContractTermTemplate(
             @Parameter(description = "ID of the contract term template to delete", required = true)
-            @PathVariable Long termTemplateId) {
+            @PathVariable UUID termTemplateId) {
         return contractTermTemplateService.deleteContractTermTemplate(termTemplateId)
                 .then(Mono.just(ResponseEntity.noContent().<Void>build()));
     }

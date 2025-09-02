@@ -12,6 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract event entity representing events that occur during a contract's lifecycle
@@ -25,10 +26,10 @@ public class ContractEvent {
 
     @Id
     @Column("contract_event_id")
-    private Long contractEventId;
+    private UUID contractEventId;
 
     @Column("contract_id")
-    private Long contractId;
+    private UUID contractId;
 
     @Column("event_type")
     private EventTypeEnum eventType;

@@ -2,20 +2,20 @@
 -- UPDATE DOCUMENT MANAGER REFERENCE TO LONG
 -- =========================
 
--- Update contract table: change document_manager_ref from VARCHAR to BIGINT and rename to document_manager_ref_id
+-- Update contract table: change document_manager_ref from VARCHAR to UUID and rename to document_manager_ref_id
 ALTER TABLE contract 
     DROP COLUMN IF EXISTS document_manager_ref,
-    ADD COLUMN document_manager_ref_id BIGINT;
+    ADD COLUMN document_manager_ref_id UUID;
 
--- Update contract_document table: change document_manager_ref from VARCHAR to BIGINT and rename to document_manager_ref_id
+-- Update contract_document table: change document_manager_ref from VARCHAR to UUID and rename to document_manager_ref_id
 ALTER TABLE contract_document 
     DROP COLUMN IF EXISTS document_manager_ref,
-    ADD COLUMN document_manager_ref_id BIGINT NOT NULL DEFAULT 0;
+    ADD COLUMN document_manager_ref_id UUID NOT NULL DEFAULT 0;
 
--- Update contract_event table: change document_manager_ref from VARCHAR to BIGINT and rename to document_manager_ref_id
+-- Update contract_event table: change document_manager_ref from VARCHAR to UUID and rename to document_manager_ref_id
 ALTER TABLE contract_event 
     DROP COLUMN IF EXISTS document_manager_ref,
-    ADD COLUMN document_manager_ref_id BIGINT;
+    ADD COLUMN document_manager_ref_id UUID;
 
 -- Add comments for clarity
 COMMENT ON COLUMN contract.document_manager_ref_id IS 'Reference ID to document in document management platform';

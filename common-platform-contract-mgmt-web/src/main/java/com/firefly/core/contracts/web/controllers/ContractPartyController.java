@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/contracts/{contractId}/parties")
@@ -40,7 +41,7 @@ public class ContractPartyController {
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<PaginationResponse<ContractPartyDTO>>> filterContractParties(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody FilterRequest<ContractPartyDTO> filterRequest) {
         return ResponseEntity.ok(contractPartyService.filterContractParties(filterRequest));
     }
@@ -60,7 +61,7 @@ public class ContractPartyController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractPartyDTO>> createContractParty(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody ContractPartyDTO contractPartyDTO) {
         // Ensure the contractId in the path is used
         contractPartyDTO.setContractId(contractId);
@@ -81,9 +82,9 @@ public class ContractPartyController {
     @GetMapping(value = "/{contractPartyId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractPartyDTO>> getContractPartyById(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract party to retrieve", required = true)
-            @PathVariable Long contractPartyId) {
+            @PathVariable UUID contractPartyId) {
         return ResponseEntity.ok(contractPartyService.getContractPartyById(contractPartyId)
                 .filter(party -> party.getContractId().equals(contractId)));
     }
@@ -103,9 +104,9 @@ public class ContractPartyController {
     @PutMapping(value = "/{contractPartyId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractPartyDTO>> updateContractParty(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract party to update", required = true)
-            @PathVariable Long contractPartyId,
+            @PathVariable UUID contractPartyId,
             @Valid @RequestBody ContractPartyDTO contractPartyDTO) {
         // Ensure the contractId in the path is used
         contractPartyDTO.setContractId(contractId);
@@ -124,9 +125,9 @@ public class ContractPartyController {
     @DeleteMapping("/{contractPartyId}")
     public Mono<ResponseEntity<Void>> deleteContractParty(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract party to delete", required = true)
-            @PathVariable Long contractPartyId) {
+            @PathVariable UUID contractPartyId) {
         return contractPartyService.getContractPartyById(contractPartyId)
                 .filter(party -> party.getContractId().equals(contractId))
                 .flatMap(party -> contractPartyService.deleteContractParty(contractPartyId))

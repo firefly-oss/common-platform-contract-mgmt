@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/contract-term-templates/{termTemplateId}/validation-rules")
@@ -40,7 +41,7 @@ public class ContractTermValidationRuleController {
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<PaginationResponse<ContractTermValidationRuleDTO>>> filterContractTermValidationRules(
             @Parameter(description = "ID of the term template", required = true)
-            @PathVariable Long termTemplateId,
+            @PathVariable UUID termTemplateId,
             @Valid @RequestBody FilterRequest<ContractTermValidationRuleDTO> filterRequest) {
         return ResponseEntity.ok(contractTermValidationRuleService.filterContractTermValidationRules(filterRequest));
     }
@@ -60,7 +61,7 @@ public class ContractTermValidationRuleController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractTermValidationRuleDTO>> createContractTermValidationRule(
             @Parameter(description = "ID of the term template", required = true)
-            @PathVariable Long termTemplateId,
+            @PathVariable UUID termTemplateId,
             @Valid @RequestBody ContractTermValidationRuleDTO contractTermValidationRuleDTO) {
         // Ensure the termTemplateId in the path is used
         contractTermValidationRuleDTO.setTermTemplateId(termTemplateId);
@@ -81,9 +82,9 @@ public class ContractTermValidationRuleController {
     @GetMapping(value = "/{validationRuleId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractTermValidationRuleDTO>> getContractTermValidationRuleById(
             @Parameter(description = "ID of the term template", required = true)
-            @PathVariable Long termTemplateId,
+            @PathVariable UUID termTemplateId,
             @Parameter(description = "ID of the contract term validation rule to retrieve", required = true)
-            @PathVariable Long validationRuleId) {
+            @PathVariable UUID validationRuleId) {
         return ResponseEntity.ok(contractTermValidationRuleService.getContractTermValidationRuleById(validationRuleId)
                 .filter(rule -> rule.getTermTemplateId().equals(termTemplateId)));
     }
@@ -103,9 +104,9 @@ public class ContractTermValidationRuleController {
     @PutMapping(value = "/{validationRuleId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractTermValidationRuleDTO>> updateContractTermValidationRule(
             @Parameter(description = "ID of the term template", required = true)
-            @PathVariable Long termTemplateId,
+            @PathVariable UUID termTemplateId,
             @Parameter(description = "ID of the contract term validation rule to update", required = true)
-            @PathVariable Long validationRuleId,
+            @PathVariable UUID validationRuleId,
             @Valid @RequestBody ContractTermValidationRuleDTO contractTermValidationRuleDTO) {
         // Ensure the termTemplateId in the path is used
         contractTermValidationRuleDTO.setTermTemplateId(termTemplateId);
@@ -124,9 +125,9 @@ public class ContractTermValidationRuleController {
     @DeleteMapping("/{validationRuleId}")
     public Mono<ResponseEntity<Void>> deleteContractTermValidationRule(
             @Parameter(description = "ID of the term template", required = true)
-            @PathVariable Long termTemplateId,
+            @PathVariable UUID termTemplateId,
             @Parameter(description = "ID of the contract term validation rule to delete", required = true)
-            @PathVariable Long validationRuleId) {
+            @PathVariable UUID validationRuleId) {
         return contractTermValidationRuleService.getContractTermValidationRuleById(validationRuleId)
                 .filter(rule -> rule.getTermTemplateId().equals(termTemplateId))
                 .flatMap(rule -> contractTermValidationRuleService.deleteContractTermValidationRule(validationRuleId))

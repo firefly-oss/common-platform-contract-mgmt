@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ContractPartyServiceImpl implements ContractPartyService {
     }
 
     @Override
-    public Mono<ContractPartyDTO> updateContractParty(Long contractPartyId, ContractPartyDTO contractPartyDTO) {
+    public Mono<ContractPartyDTO> updateContractParty(UUID contractPartyId, ContractPartyDTO contractPartyDTO) {
         return repository.findById(contractPartyId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract party not found with ID: " + contractPartyId)))
                 .flatMap(existingParty -> {
@@ -54,14 +55,14 @@ public class ContractPartyServiceImpl implements ContractPartyService {
     }
 
     @Override
-    public Mono<Void> deleteContractParty(Long contractPartyId) {
+    public Mono<Void> deleteContractParty(UUID contractPartyId) {
         return repository.findById(contractPartyId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract party not found with ID: " + contractPartyId)))
                 .flatMap(party -> repository.deleteById(contractPartyId));
     }
 
     @Override
-    public Mono<ContractPartyDTO> getContractPartyById(Long contractPartyId) {
+    public Mono<ContractPartyDTO> getContractPartyById(UUID contractPartyId) {
         return repository.findById(contractPartyId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract party not found with ID: " + contractPartyId)))
                 .map(mapper::toDTO);

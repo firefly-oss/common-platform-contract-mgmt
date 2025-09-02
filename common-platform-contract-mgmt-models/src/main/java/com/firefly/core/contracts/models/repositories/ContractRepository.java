@@ -9,12 +9,13 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Repository interface for Contract entity operations
  */
 @Repository
-public interface ContractRepository extends BaseRepository<Contract, Long> {
+public interface ContractRepository extends BaseRepository<Contract, UUID> {
 
     /**
      * Find contracts by status

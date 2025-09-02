@@ -6,42 +6,43 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Repository interface for ContractParty entity operations
  */
 @Repository
-public interface ContractPartyRepository extends BaseRepository<ContractParty, Long> {
+public interface ContractPartyRepository extends BaseRepository<ContractParty, UUID> {
 
     /**
      * Find contract parties by contract ID
      */
-    Flux<ContractParty> findByContractId(Long contractId);
+    Flux<ContractParty> findByContractId(UUID contractId);
 
     /**
      * Find contract parties by party ID
      */
-    Flux<ContractParty> findByPartyId(Long partyId);
+    Flux<ContractParty> findByPartyId(UUID partyId);
 
     /**
      * Find active contract parties by contract ID
      */
-    Flux<ContractParty> findByContractIdAndIsActive(Long contractId, Boolean isActive);
+    Flux<ContractParty> findByContractIdAndIsActive(UUID contractId, Boolean isActive);
 
     /**
      * Find active contract parties by party ID
      */
-    Flux<ContractParty> findByPartyIdAndIsActive(Long partyId, Boolean isActive);
+    Flux<ContractParty> findByPartyIdAndIsActive(UUID partyId, Boolean isActive);
 
     /**
      * Find contract parties by role
      */
-    Flux<ContractParty> findByRoleInContractId(Long roleInContractId);
+    Flux<ContractParty> findByRoleInContractId(UUID roleInContractId);
 
     /**
      * Find contract party by contract and party ID
      */
-    Mono<ContractParty> findByContractIdAndPartyId(Long contractId, Long partyId);
+    Mono<ContractParty> findByContractIdAndPartyId(UUID contractId, UUID partyId);
 
     /**
      * Count active parties for a contract

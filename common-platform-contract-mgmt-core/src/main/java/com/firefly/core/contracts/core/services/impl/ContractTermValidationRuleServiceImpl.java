@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ContractTermValidationRuleServiceImpl implements ContractTermValida
     }
 
     @Override
-    public Mono<ContractTermValidationRuleDTO> updateContractTermValidationRule(Long validationRuleId, ContractTermValidationRuleDTO contractTermValidationRuleDTO) {
+    public Mono<ContractTermValidationRuleDTO> updateContractTermValidationRule(UUID validationRuleId, ContractTermValidationRuleDTO contractTermValidationRuleDTO) {
         return repository.findById(validationRuleId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term validation rule not found with ID: " + validationRuleId)))
                 .flatMap(existingRule -> {
@@ -54,14 +55,14 @@ public class ContractTermValidationRuleServiceImpl implements ContractTermValida
     }
 
     @Override
-    public Mono<Void> deleteContractTermValidationRule(Long validationRuleId) {
+    public Mono<Void> deleteContractTermValidationRule(UUID validationRuleId) {
         return repository.findById(validationRuleId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term validation rule not found with ID: " + validationRuleId)))
                 .flatMap(rule -> repository.deleteById(validationRuleId));
     }
 
     @Override
-    public Mono<ContractTermValidationRuleDTO> getContractTermValidationRuleById(Long validationRuleId) {
+    public Mono<ContractTermValidationRuleDTO> getContractTermValidationRuleById(UUID validationRuleId) {
         return repository.findById(validationRuleId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term validation rule not found with ID: " + validationRuleId)))
                 .map(mapper::toDTO);

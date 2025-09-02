@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/contracts/{contractId}/status-history")
@@ -40,7 +41,7 @@ public class ContractStatusHistoryController {
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<PaginationResponse<ContractStatusHistoryDTO>>> filterContractStatusHistory(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody FilterRequest<ContractStatusHistoryDTO> filterRequest) {
         return ResponseEntity.ok(contractStatusHistoryService.filterContractStatusHistory(filterRequest));
     }
@@ -60,7 +61,7 @@ public class ContractStatusHistoryController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractStatusHistoryDTO>> createContractStatusHistory(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody ContractStatusHistoryDTO contractStatusHistoryDTO) {
         // Ensure the contractId in the path is used
         contractStatusHistoryDTO.setContractId(contractId);
@@ -81,9 +82,9 @@ public class ContractStatusHistoryController {
     @GetMapping(value = "/{contractStatusHistoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractStatusHistoryDTO>> getContractStatusHistoryById(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract status history to retrieve", required = true)
-            @PathVariable Long contractStatusHistoryId) {
+            @PathVariable UUID contractStatusHistoryId) {
         return ResponseEntity.ok(contractStatusHistoryService.getContractStatusHistoryById(contractStatusHistoryId)
                 .filter(history -> history.getContractId().equals(contractId)));
     }
@@ -103,9 +104,9 @@ public class ContractStatusHistoryController {
     @PutMapping(value = "/{contractStatusHistoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractStatusHistoryDTO>> updateContractStatusHistory(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract status history to update", required = true)
-            @PathVariable Long contractStatusHistoryId,
+            @PathVariable UUID contractStatusHistoryId,
             @Valid @RequestBody ContractStatusHistoryDTO contractStatusHistoryDTO) {
         // Ensure the contractId in the path is used
         contractStatusHistoryDTO.setContractId(contractId);
@@ -124,9 +125,9 @@ public class ContractStatusHistoryController {
     @DeleteMapping("/{contractStatusHistoryId}")
     public Mono<ResponseEntity<Void>> deleteContractStatusHistory(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract status history to delete", required = true)
-            @PathVariable Long contractStatusHistoryId) {
+            @PathVariable UUID contractStatusHistoryId) {
         return contractStatusHistoryService.getContractStatusHistoryById(contractStatusHistoryId)
                 .filter(history -> history.getContractId().equals(contractId))
                 .flatMap(history -> contractStatusHistoryService.deleteContractStatusHistory(contractStatusHistoryId))

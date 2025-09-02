@@ -4,6 +4,7 @@ import com.firefly.common.core.filters.FilterRequest;
 import com.firefly.common.core.queries.PaginationResponse;
 import com.firefly.core.contracts.interfaces.dtos.ContractTermDynamicDTO;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Service interface for managing contract term dynamics.
@@ -32,7 +33,7 @@ public interface ContractTermDynamicService {
      * @param contractTermDynamicDTO the data transfer object containing the updated details of the contract term dynamic
      * @return a reactive Mono containing the updated ContractTermDynamicDTO
      */
-    Mono<ContractTermDynamicDTO> updateContractTermDynamic(Long termId, ContractTermDynamicDTO contractTermDynamicDTO);
+    Mono<ContractTermDynamicDTO> updateContractTermDynamic(UUID termId, ContractTermDynamicDTO contractTermDynamicDTO);
     
     /**
      * Deletes a contract term dynamic identified by its unique ID.
@@ -40,7 +41,7 @@ public interface ContractTermDynamicService {
      * @param termId the unique identifier of the contract term dynamic to be deleted
      * @return a Mono that completes when the contract term dynamic is successfully deleted or errors if the deletion fails
      */
-    Mono<Void> deleteContractTermDynamic(Long termId);
+    Mono<Void> deleteContractTermDynamic(UUID termId);
     
     /**
      * Retrieves a contract term dynamic by its unique identifier.
@@ -49,5 +50,5 @@ public interface ContractTermDynamicService {
      * @return a Mono emitting the {@link ContractTermDynamicDTO} representing the contract term dynamic if found,
      *         or an empty Mono if the contract term dynamic does not exist
      */
-    Mono<ContractTermDynamicDTO> getContractTermDynamicById(Long termId);
+    Mono<ContractTermDynamicDTO> getContractTermDynamicById(UUID termId);
 }

@@ -11,6 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract document entity representing documents associated with a contract
@@ -24,16 +25,16 @@ public class ContractDocument {
 
     @Id
     @Column("contract_document_id")
-    private Long contractDocumentId;
+    private UUID contractDocumentId;
 
     @Column("contract_id")
-    private Long contractId;
+    private UUID contractId;
 
     @Column("document_type_id")
-    private Long documentTypeId;
+    private UUID documentTypeId;
 
     @Column("document_id")
-    private Long documentId;
+    private UUID documentId;
 
     @Column("date_added")
     private LocalDateTime dateAdded;

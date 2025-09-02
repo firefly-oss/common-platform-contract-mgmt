@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ContractStatusHistoryServiceImpl implements ContractStatusHistorySe
     }
 
     @Override
-    public Mono<ContractStatusHistoryDTO> updateContractStatusHistory(Long contractStatusHistoryId, ContractStatusHistoryDTO contractStatusHistoryDTO) {
+    public Mono<ContractStatusHistoryDTO> updateContractStatusHistory(UUID contractStatusHistoryId, ContractStatusHistoryDTO contractStatusHistoryDTO) {
         return repository.findById(contractStatusHistoryId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract status history not found with ID: " + contractStatusHistoryId)))
                 .flatMap(existingHistory -> {
@@ -54,14 +55,14 @@ public class ContractStatusHistoryServiceImpl implements ContractStatusHistorySe
     }
 
     @Override
-    public Mono<Void> deleteContractStatusHistory(Long contractStatusHistoryId) {
+    public Mono<Void> deleteContractStatusHistory(UUID contractStatusHistoryId) {
         return repository.findById(contractStatusHistoryId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract status history not found with ID: " + contractStatusHistoryId)))
                 .flatMap(history -> repository.deleteById(contractStatusHistoryId));
     }
 
     @Override
-    public Mono<ContractStatusHistoryDTO> getContractStatusHistoryById(Long contractStatusHistoryId) {
+    public Mono<ContractStatusHistoryDTO> getContractStatusHistoryById(UUID contractStatusHistoryId) {
         return repository.findById(contractStatusHistoryId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract status history not found with ID: " + contractStatusHistoryId)))
                 .map(mapper::toDTO);

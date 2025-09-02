@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ContractTermTemplateServiceImpl implements ContractTermTemplateServ
     }
 
     @Override
-    public Mono<ContractTermTemplateDTO> updateContractTermTemplate(Long termTemplateId, ContractTermTemplateDTO contractTermTemplateDTO) {
+    public Mono<ContractTermTemplateDTO> updateContractTermTemplate(UUID termTemplateId, ContractTermTemplateDTO contractTermTemplateDTO) {
         return repository.findById(termTemplateId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term template not found with ID: " + termTemplateId)))
                 .flatMap(existingTemplate -> {
@@ -54,14 +55,14 @@ public class ContractTermTemplateServiceImpl implements ContractTermTemplateServ
     }
 
     @Override
-    public Mono<Void> deleteContractTermTemplate(Long termTemplateId) {
+    public Mono<Void> deleteContractTermTemplate(UUID termTemplateId) {
         return repository.findById(termTemplateId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term template not found with ID: " + termTemplateId)))
                 .flatMap(template -> repository.deleteById(termTemplateId));
     }
 
     @Override
-    public Mono<ContractTermTemplateDTO> getContractTermTemplateById(Long termTemplateId) {
+    public Mono<ContractTermTemplateDTO> getContractTermTemplateById(UUID termTemplateId) {
         return repository.findById(termTemplateId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract term template not found with ID: " + termTemplateId)))
                 .map(mapper::toDTO);

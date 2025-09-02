@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract document DTO for API operations - compatible with R2DBC ContractDocument entity
@@ -22,16 +23,16 @@ import java.time.LocalDateTime;
 public class ContractDocumentDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long contractDocumentId;
+    private UUID contractDocumentId;
 
     @NotNull(message = "Contract ID is required")
-    private Long contractId;
+    private UUID contractId;
 
     @NotNull(message = "Document type ID is required")
-    private Long documentTypeId;
+    private UUID documentTypeId;
 
     @NotNull(message = "Document ID is required")
-    private Long documentId;
+    private UUID documentId;
 
     @ValidDateTime
     private LocalDateTime dateAdded;

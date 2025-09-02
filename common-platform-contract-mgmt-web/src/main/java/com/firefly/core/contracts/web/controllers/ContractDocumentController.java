@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/contracts/{contractId}/documents")
@@ -40,7 +41,7 @@ public class ContractDocumentController {
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<PaginationResponse<ContractDocumentDTO>>> filterContractDocuments(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody FilterRequest<ContractDocumentDTO> filterRequest) {
         return ResponseEntity.ok(contractDocumentService.filterContractDocuments(filterRequest));
     }
@@ -60,7 +61,7 @@ public class ContractDocumentController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractDocumentDTO>> createContractDocument(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody ContractDocumentDTO contractDocumentDTO) {
         // Ensure the contractId in the path is used
         contractDocumentDTO.setContractId(contractId);
@@ -81,9 +82,9 @@ public class ContractDocumentController {
     @GetMapping(value = "/{contractDocumentId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractDocumentDTO>> getContractDocumentById(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract document to retrieve", required = true)
-            @PathVariable Long contractDocumentId) {
+            @PathVariable UUID contractDocumentId) {
         return ResponseEntity.ok(contractDocumentService.getContractDocumentById(contractDocumentId)
                 .filter(document -> document.getContractId().equals(contractId)));
     }
@@ -103,9 +104,9 @@ public class ContractDocumentController {
     @PutMapping(value = "/{contractDocumentId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractDocumentDTO>> updateContractDocument(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract document to update", required = true)
-            @PathVariable Long contractDocumentId,
+            @PathVariable UUID contractDocumentId,
             @Valid @RequestBody ContractDocumentDTO contractDocumentDTO) {
         // Ensure the contractId in the path is used
         contractDocumentDTO.setContractId(contractId);
@@ -124,9 +125,9 @@ public class ContractDocumentController {
     @DeleteMapping("/{contractDocumentId}")
     public Mono<ResponseEntity<Void>> deleteContractDocument(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract document to delete", required = true)
-            @PathVariable Long contractDocumentId) {
+            @PathVariable UUID contractDocumentId) {
         return contractDocumentService.getContractDocumentById(contractDocumentId)
                 .filter(document -> document.getContractId().equals(contractId))
                 .flatMap(document -> contractDocumentService.deleteContractDocument(contractDocumentId))

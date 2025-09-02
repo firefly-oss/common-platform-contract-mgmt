@@ -9,22 +9,23 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Repository interface for ContractStatusHistory entity operations
  */
 @Repository
-public interface ContractStatusHistoryRepository extends BaseRepository<ContractStatusHistory, Long> {
+public interface ContractStatusHistoryRepository extends BaseRepository<ContractStatusHistory, UUID> {
 
     /**
      * Find status history by contract ID
      */
-    Flux<ContractStatusHistory> findByContractId(Long contractId);
+    Flux<ContractStatusHistory> findByContractId(UUID contractId);
 
     /**
      * Find status history by contract ID ordered by start date
      */
-    Flux<ContractStatusHistory> findByContractIdOrderByStatusStartDateDesc(Long contractId);
+    Flux<ContractStatusHistory> findByContractIdOrderByStatusStartDateDesc(UUID contractId);
 
     /**
      * Find status history by status code
@@ -35,7 +36,7 @@ public interface ContractStatusHistoryRepository extends BaseRepository<Contract
      * Find current status for a contract (no end date)
      */
     @Query("SELECT * FROM contract_status_history WHERE contract_id = :contractId AND status_end_date IS NULL")
-    Mono<ContractStatusHistory> findCurrentStatusByContractId(@Param("contractId") Long contractId);
+    Mono<ContractStatusHistory> findCurrentStatusByContractId(@Param("contractId") UUID contractId);
 
     /**
      * Find status history within a date range
@@ -48,7 +49,7 @@ public interface ContractStatusHistoryRepository extends BaseRepository<Contract
      * Find latest status history entry for a contract
      */
     @Query("SELECT * FROM contract_status_history WHERE contract_id = :contractId ORDER BY status_start_date DESC LIMIT 1")
-    Mono<ContractStatusHistory> findLatestByContractId(@Param("contractId") Long contractId);
+    Mono<ContractStatusHistory> findLatestByContractId(@Param("contractId") UUID contractId);
 
     /**
      * Find active status histories (no end date)

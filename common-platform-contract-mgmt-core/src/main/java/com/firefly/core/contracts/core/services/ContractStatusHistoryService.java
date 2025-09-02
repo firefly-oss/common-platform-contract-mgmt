@@ -4,6 +4,7 @@ import com.firefly.common.core.filters.FilterRequest;
 import com.firefly.common.core.queries.PaginationResponse;
 import com.firefly.core.contracts.interfaces.dtos.ContractStatusHistoryDTO;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Service interface for managing contract status history.
@@ -32,7 +33,7 @@ public interface ContractStatusHistoryService {
      * @param contractStatusHistoryDTO the data transfer object containing the updated details of the contract status history
      * @return a reactive Mono containing the updated ContractStatusHistoryDTO
      */
-    Mono<ContractStatusHistoryDTO> updateContractStatusHistory(Long contractStatusHistoryId, ContractStatusHistoryDTO contractStatusHistoryDTO);
+    Mono<ContractStatusHistoryDTO> updateContractStatusHistory(UUID contractStatusHistoryId, ContractStatusHistoryDTO contractStatusHistoryDTO);
     
     /**
      * Deletes a contract status history identified by its unique ID.
@@ -40,7 +41,7 @@ public interface ContractStatusHistoryService {
      * @param contractStatusHistoryId the unique identifier of the contract status history to be deleted
      * @return a Mono that completes when the contract status history is successfully deleted or errors if the deletion fails
      */
-    Mono<Void> deleteContractStatusHistory(Long contractStatusHistoryId);
+    Mono<Void> deleteContractStatusHistory(UUID contractStatusHistoryId);
     
     /**
      * Retrieves a contract status history by its unique identifier.
@@ -49,5 +50,5 @@ public interface ContractStatusHistoryService {
      * @return a Mono emitting the {@link ContractStatusHistoryDTO} representing the contract status history if found,
      *         or an empty Mono if the contract status history does not exist
      */
-    Mono<ContractStatusHistoryDTO> getContractStatusHistoryById(Long contractStatusHistoryId);
+    Mono<ContractStatusHistoryDTO> getContractStatusHistoryById(UUID contractStatusHistoryId);
 }

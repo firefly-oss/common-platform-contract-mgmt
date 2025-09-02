@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract risk assessment DTO for API operations - compatible with R2DBC ContractRiskAssessment entity
@@ -26,10 +27,10 @@ import java.time.LocalDateTime;
 public class ContractRiskAssessmentDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long contractRiskAssessmentId;
+    private UUID contractRiskAssessmentId;
 
     @NotNull(message = "Contract ID is required")
-    private Long contractId;
+    private UUID contractId;
 
     @DecimalMin(value = "0.00", message = "Risk score must be greater than or equal to 0")
     @DecimalMax(value = "100.00", message = "Risk score must be less than or equal to 100")

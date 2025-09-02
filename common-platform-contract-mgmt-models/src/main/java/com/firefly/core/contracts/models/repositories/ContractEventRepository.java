@@ -9,22 +9,23 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Repository interface for ContractEvent entity operations
  */
 @Repository
-public interface ContractEventRepository extends BaseRepository<ContractEvent, Long> {
+public interface ContractEventRepository extends BaseRepository<ContractEvent, UUID> {
 
     /**
      * Find events by contract ID
      */
-    Flux<ContractEvent> findByContractId(Long contractId);
+    Flux<ContractEvent> findByContractId(UUID contractId);
 
     /**
      * Find events by contract ID ordered by event date
      */
-    Flux<ContractEvent> findByContractIdOrderByEventDateDesc(Long contractId);
+    Flux<ContractEvent> findByContractIdOrderByEventDateDesc(UUID contractId);
 
     /**
      * Find events by event type
@@ -34,7 +35,7 @@ public interface ContractEventRepository extends BaseRepository<ContractEvent, L
     /**
      * Find events by contract ID and event type
      */
-    Flux<ContractEvent> findByContractIdAndEventType(Long contractId, EventTypeEnum eventType);
+    Flux<ContractEvent> findByContractIdAndEventType(UUID contractId, EventTypeEnum eventType);
 
     /**
      * Find events within a date range
@@ -45,7 +46,7 @@ public interface ContractEventRepository extends BaseRepository<ContractEvent, L
      * Find events by contract ID within a date range
      */
     @Query("SELECT * FROM contract_event WHERE contract_id = :contractId AND event_date BETWEEN :fromDate AND :toDate ORDER BY event_date DESC")
-    Flux<ContractEvent> findByContractIdAndEventDateBetween(@Param("contractId") Long contractId,
+    Flux<ContractEvent> findByContractIdAndEventDateBetween(@Param("contractId") UUID contractId,
                                                             @Param("fromDate") LocalDateTime fromDate,
                                                             @Param("toDate") LocalDateTime toDate);
 
@@ -53,7 +54,7 @@ public interface ContractEventRepository extends BaseRepository<ContractEvent, L
      * Find recent events for a contract
      */
     @Query("SELECT * FROM contract_event WHERE contract_id = :contractId ORDER BY event_date DESC LIMIT :limit")
-    Flux<ContractEvent> findRecentEventsByContractId(@Param("contractId") Long contractId, 
+    Flux<ContractEvent> findRecentEventsByContractId(@Param("contractId") UUID contractId, 
                                                      @Param("limit") Integer limit);
 
     /**
@@ -75,5 +76,5 @@ public interface ContractEventRepository extends BaseRepository<ContractEvent, L
      * Find latest event for a contract
      */
     @Query("SELECT * FROM contract_event WHERE contract_id = :contractId ORDER BY event_date DESC LIMIT 1")
-    Mono<ContractEvent> findLatestEventByContractId(@Param("contractId") Long contractId);
+    Mono<ContractEvent> findLatestEventByContractId(@Param("contractId") UUID contractId);
 }

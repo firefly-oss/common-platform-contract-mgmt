@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract DTO for API operations - compatible with R2DBC Contract entity
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 public class ContractDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long contractId;
+    private UUID contractId;
 
     @Size(max = 255, message = "Contract number must not exceed 255 characters")
     private String contractNumber;

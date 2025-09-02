@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ContractEventServiceImpl implements ContractEventService {
     }
 
     @Override
-    public Mono<ContractEventDTO> updateContractEvent(Long contractEventId, ContractEventDTO contractEventDTO) {
+    public Mono<ContractEventDTO> updateContractEvent(UUID contractEventId, ContractEventDTO contractEventDTO) {
         return repository.findById(contractEventId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract event not found with ID: " + contractEventId)))
                 .flatMap(existingEvent -> {
@@ -54,14 +55,14 @@ public class ContractEventServiceImpl implements ContractEventService {
     }
 
     @Override
-    public Mono<Void> deleteContractEvent(Long contractEventId) {
+    public Mono<Void> deleteContractEvent(UUID contractEventId) {
         return repository.findById(contractEventId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract event not found with ID: " + contractEventId)))
                 .flatMap(event -> repository.deleteById(contractEventId));
     }
 
     @Override
-    public Mono<ContractEventDTO> getContractEventById(Long contractEventId) {
+    public Mono<ContractEventDTO> getContractEventById(UUID contractEventId) {
         return repository.findById(contractEventId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Contract event not found with ID: " + contractEventId)))
                 .map(mapper::toDTO);

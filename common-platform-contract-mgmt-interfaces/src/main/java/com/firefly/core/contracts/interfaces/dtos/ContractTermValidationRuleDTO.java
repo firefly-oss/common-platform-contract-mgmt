@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Contract term validation rule DTO for API operations - compatible with R2DBC ContractTermValidationRule entity
@@ -24,10 +25,10 @@ import java.time.LocalDateTime;
 public class ContractTermValidationRuleDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long validationRuleId;
+    private UUID validationRuleId;
 
     @NotNull(message = "Term template ID is required")
-    private Long termTemplateId;
+    private UUID termTemplateId;
 
     @NotNull(message = "Validation type is required")
     private TermValidationTypeEnum validationType;

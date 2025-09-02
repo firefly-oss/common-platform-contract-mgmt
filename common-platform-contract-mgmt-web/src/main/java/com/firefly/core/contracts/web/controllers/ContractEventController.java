@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/contracts/{contractId}/events")
@@ -40,7 +41,7 @@ public class ContractEventController {
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<PaginationResponse<ContractEventDTO>>> filterContractEvents(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody FilterRequest<ContractEventDTO> filterRequest) {
         return ResponseEntity.ok(contractEventService.filterContractEvents(filterRequest));
     }
@@ -60,7 +61,7 @@ public class ContractEventController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractEventDTO>> createContractEvent(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Valid @RequestBody ContractEventDTO contractEventDTO) {
         // Ensure the contractId in the path is used
         contractEventDTO.setContractId(contractId);
@@ -81,9 +82,9 @@ public class ContractEventController {
     @GetMapping(value = "/{contractEventId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractEventDTO>> getContractEventById(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract event to retrieve", required = true)
-            @PathVariable Long contractEventId) {
+            @PathVariable UUID contractEventId) {
         return ResponseEntity.ok(contractEventService.getContractEventById(contractEventId)
                 .filter(event -> event.getContractId().equals(contractId)));
     }
@@ -103,9 +104,9 @@ public class ContractEventController {
     @PutMapping(value = "/{contractEventId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mono<ContractEventDTO>> updateContractEvent(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract event to update", required = true)
-            @PathVariable Long contractEventId,
+            @PathVariable UUID contractEventId,
             @Valid @RequestBody ContractEventDTO contractEventDTO) {
         // Ensure the contractId in the path is used
         contractEventDTO.setContractId(contractId);
@@ -124,9 +125,9 @@ public class ContractEventController {
     @DeleteMapping("/{contractEventId}")
     public Mono<ResponseEntity<Void>> deleteContractEvent(
             @Parameter(description = "ID of the contract", required = true)
-            @PathVariable Long contractId,
+            @PathVariable UUID contractId,
             @Parameter(description = "ID of the contract event to delete", required = true)
-            @PathVariable Long contractEventId) {
+            @PathVariable UUID contractEventId) {
         return contractEventService.getContractEventById(contractEventId)
                 .filter(event -> event.getContractId().equals(contractId))
                 .flatMap(event -> contractEventService.deleteContractEvent(contractEventId))
