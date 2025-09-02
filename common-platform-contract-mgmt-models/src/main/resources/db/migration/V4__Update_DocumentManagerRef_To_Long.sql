@@ -8,9 +8,9 @@ ALTER TABLE contract
     ADD COLUMN document_manager_ref_id UUID;
 
 -- Update contract_document table: change document_manager_ref from VARCHAR to UUID and rename to document_manager_ref_id
-ALTER TABLE contract_document 
+ALTER TABLE contract_document
     DROP COLUMN IF EXISTS document_manager_ref,
-    ADD COLUMN document_manager_ref_id UUID NOT NULL DEFAULT 0;
+    ADD COLUMN document_manager_ref_id UUID;
 
 -- Update contract_event table: change document_manager_ref from VARCHAR to UUID and rename to document_manager_ref_id
 ALTER TABLE contract_event 
