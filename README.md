@@ -96,7 +96,7 @@ The microservice follows a layered architecture pattern with clear separation of
 erDiagram
     %% Core Contract Entity
     CONTRACT {
-        bigint contract_id PK "Primary Key - Auto-generated"
+        uuid contract_id PK "Primary Key - Auto-generated UUID"
         varchar_255 contract_number UK "Unique contract identifier"
         contract_status_enum contract_status "Current status (DRAFT, ACTIVE, etc.)"
         timestamp start_date "Contract effective start date"
@@ -107,10 +107,10 @@ erDiagram
 
     %% Contract Party Relationship
     CONTRACT_PARTY {
-        bigint contract_party_id PK "Primary Key - Auto-generated"
-        bigint contract_id FK "Foreign Key to CONTRACT"
-        bigint party_id "Reference to Party Management System"
-        bigint role_in_contract_id "Reference to Role Management System"
+        uuid contract_party_id PK "Primary Key - Auto-generated UUID"
+        uuid contract_id FK "Foreign Key to CONTRACT"
+        uuid party_id "Reference to Party Management System"
+        uuid role_in_contract_id "Reference to Role Management System"
         timestamp date_joined "Date party joined the contract"
         timestamp date_left "Date party left the contract"
         boolean is_active "Current active status of party"
@@ -120,10 +120,10 @@ erDiagram
 
     %% Contract Documents
     CONTRACT_DOCUMENT {
-        bigint contract_document_id PK "Primary Key - Auto-generated"
-        bigint contract_id FK "Foreign Key to CONTRACT"
-        bigint document_type_id FK "Foreign Key to ContractDocumentType master data"
-        bigint document_id "Reference to document in document management platform"
+        uuid contract_document_id PK "Primary Key - Auto-generated UUID"
+        uuid contract_id FK "Foreign Key to CONTRACT"
+        uuid document_type_id FK "Foreign Key to ContractDocumentType master data"
+        uuid document_id "Reference to document in document management platform"
         timestamp date_added "Date document was added"
         timestamp created_at "Record creation timestamp"
         timestamp updated_at "Last modification timestamp"
@@ -131,8 +131,8 @@ erDiagram
 
     %% Contract Status History
     CONTRACT_STATUS_HISTORY {
-        bigint contract_status_history_id PK "Primary Key - Auto-generated"
-        bigint contract_id FK "Foreign Key to CONTRACT"
+        uuid contract_status_history_id PK "Primary Key - Auto-generated UUID"
+        uuid contract_id FK "Foreign Key to CONTRACT"
         status_code_enum status_code "Status transition code"
         timestamp status_start_date "When status became effective"
         timestamp status_end_date "When status ended (nullable)"
@@ -142,8 +142,8 @@ erDiagram
 
     %% Contract Events
     CONTRACT_EVENT {
-        bigint contract_event_id PK "Primary Key - Auto-generated"
-        bigint contract_id FK "Foreign Key to CONTRACT"
+        uuid contract_event_id PK "Primary Key - Auto-generated UUID"
+        uuid contract_id FK "Foreign Key to CONTRACT"
         event_type_enum event_type "Type of event (CREATED, SIGNED, etc.)"
         timestamp event_date "When the event occurred"
         text event_description "Detailed description of the event"
@@ -153,8 +153,8 @@ erDiagram
 
     %% Risk Assessment
     CONTRACT_RISK_ASSESSMENT {
-        bigint contract_risk_assessment_id PK "Primary Key - Auto-generated"
-        bigint contract_id FK "Foreign Key to CONTRACT"
+        uuid contract_risk_assessment_id PK "Primary Key - Auto-generated UUID"
+        uuid contract_id FK "Foreign Key to CONTRACT"
         decimal_5_2 risk_score "Numerical risk score (0.00-999.99)"
         risk_level_enum risk_level "Risk level (LOW, MEDIUM, HIGH, CRITICAL)"
         timestamp assessment_date "Date of risk assessment"
@@ -166,7 +166,7 @@ erDiagram
 
     %% Contract Term Templates
     CONTRACT_TERM_TEMPLATE {
-        bigint term_template_id PK "Primary Key - Auto-generated"
+        uuid term_template_id PK "Primary Key - Auto-generated UUID"
         varchar_100 code UK "Unique template code identifier"
         varchar_255 name "Human-readable template name"
         text description "Detailed template description"
@@ -183,8 +183,8 @@ erDiagram
 
     %% Term Validation Rules
     CONTRACT_TERM_VALIDATION_RULE {
-        bigint validation_rule_id PK "Primary Key - Auto-generated"
-        bigint term_template_id FK "Foreign Key to CONTRACT_TERM_TEMPLATE"
+        uuid validation_rule_id PK "Primary Key - Auto-generated UUID"
+        uuid term_template_id FK "Foreign Key to CONTRACT_TERM_TEMPLATE"
         term_validation_type_enum validation_type "Type of validation (REGEX, RANGE, etc.)"
         jsonb validation_value "Validation criteria as JSON object"
         varchar_500 error_message "Error message for validation failure"
@@ -194,9 +194,9 @@ erDiagram
 
     %% Dynamic Contract Terms
     CONTRACT_TERM_DYNAMIC {
-        bigint term_id PK "Primary Key - Auto-generated"
-        bigint contract_id FK "Foreign Key to CONTRACT"
-        bigint term_template_id FK "Foreign Key to CONTRACT_TERM_TEMPLATE"
+        uuid term_id PK "Primary Key - Auto-generated UUID"
+        uuid contract_id FK "Foreign Key to CONTRACT"
+        uuid term_template_id FK "Foreign Key to CONTRACT_TERM_TEMPLATE"
         text term_value_text "Text value for the term"
         decimal_20_6 term_value_numeric "Numeric value for the term"
         jsonb term_value_json "JSON value for complex terms"
@@ -445,11 +445,11 @@ curl -X POST http://localhost:8080/api/v1/contracts \
 
 #### Add Party to Contract
 ```bash
-curl -X POST http://localhost:8080/api/v1/contracts/1/parties \
+curl -X POST http://localhost:8080/api/v1/contracts/550e8400-e29b-41d4-a716-446655440000/parties \
   -H "Content-Type: application/json" \
   -d '{
-    "partyId": 12345,
-    "roleInContractId": 1,
+    "partyId": "550e8400-e29b-41d4-a716-446655440001",
+    "roleInContractId": "550e8400-e29b-41d4-a716-446655440002",
     "dateJoined": "2024-01-01T00:00:00",
     "isActive": true
   }'
