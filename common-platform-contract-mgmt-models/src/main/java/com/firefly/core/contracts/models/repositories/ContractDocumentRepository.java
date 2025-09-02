@@ -51,12 +51,12 @@ public interface ContractDocumentRepository extends BaseRepository<ContractDocum
     /**
      * Count documents by contract ID
      */
-    Mono<Long> countByContractId(Long contractId);
+    Mono<Long> countByContractId(UUID contractId);
 
     /**
      * Count documents by document type ID
      */
-    Mono<Long> countByDocumentTypeId(Long documentTypeId);
+    Mono<Long> countByDocumentTypeId(UUID documentTypeId);
 
     /**
      * Find latest documents for a contract
