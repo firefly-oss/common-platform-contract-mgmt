@@ -1890,6 +1890,12 @@ components:
         endDate:
           type: string
           format: date-time
+        productCatalogId:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
