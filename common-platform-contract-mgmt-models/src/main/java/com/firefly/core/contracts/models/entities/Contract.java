@@ -57,6 +57,12 @@ public class Contract {
     @Column("end_date")
     private LocalDateTime endDate;
 
+    @Column("product_catalog_id")
+    private UUID productCatalogId;
+
+    @Column("product_id")
+    private UUID productId;
+
     @CreatedDate
     @Column("created_at")
     private LocalDateTime createdAt;
