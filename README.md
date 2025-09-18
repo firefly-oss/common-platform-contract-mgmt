@@ -12,7 +12,7 @@ A contract management microservice that is part of the **Firefly OpenCore Platfo
 The Contract Management Microservice handles:
 
 - **Customer-Product Relationships**: Links customers (partyId) with financial products through contracts
-- **Product Catalog Integration**: Manages relationships with product types (productCatalogId) and specific products (productId)
+- **Product Catalog Integration**: Manages relationships with product types (productCatalogId) and specific products (productId). Contracts link parties with product catalog entries (productCatalogId as UUID) and the specific product instances (productId as UUID)
 - **Role Management**: Defines and manages customer roles within contracts
 - **Contract Lifecycle**: Handles contract creation, activation, amendments, suspension, and termination
 - **Dynamic Terms**: Supports flexible contract terms that can be configured per contract
@@ -101,6 +101,8 @@ erDiagram
         contract_status_enum contract_status "Current status (DRAFT, ACTIVE, etc.)"
         timestamp start_date "Contract effective start date"
         timestamp end_date "Contract expiration date"
+        uuid product_catalog_id "Reference to product catalog entry in Product Management System"
+        uuid product_id "Reference to specific product instance in Product Management System"
         timestamp created_at "Record creation timestamp"
         timestamp updated_at "Last modification timestamp"
     }
