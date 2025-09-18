@@ -55,6 +55,10 @@ public class ContractDTO {
     @ValidDateTime
     private LocalDateTime endDate;
 
+    private UUID productCatalogId;
+
+    private UUID productId;
+
     @ValidDateTime
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;
