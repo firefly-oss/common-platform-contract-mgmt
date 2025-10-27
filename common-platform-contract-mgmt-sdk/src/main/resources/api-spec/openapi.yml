@@ -30,7 +30,66 @@ tags:
     description: API for managing contract risk assessments
   - name: Contract Term Validation Rules
     description: API for managing contract term validation rules
+  - name: Global Contract Parties
+    description: API for party-centric contract party queries
 paths:
+  /api/v1/contract-parties:
+    get:
+      tags:
+        - Global Contract Parties
+      summary: Get contract parties by party ID
+      description: Returns a paginated list of all contract parties for a specific party. This endpoint is useful for finding all contracts a party is involved in.
+      operationId: getContractPartiesByPartyId
+      parameters:
+        - name: partyId
+          in: query
+          description: ID of the party to retrieve contract parties for
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: isActive
+          in: query
+          description: Filter for active contracts only
+          required: false
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Successfully retrieved contract parties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '400':
+          description: Invalid party ID provided
+        '500':
+          description: Internal server error
+  /api/v1/contract-parties/filter:
+    post:
+      tags:
+        - Global Contract Parties
+      summary: Filter contract parties globally
+      description: Returns a paginated list of contract parties based on filter criteria across all contracts
+      operationId: filterContractPartiesGlobally
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequestContractPartyDTO'
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved contract parties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '400':
+          description: Invalid filter criteria provided
+        '500':
+          description: Internal server error
   /api/v1/contracts/{contractId}/terms/{termId}:
     get:
       tags:
