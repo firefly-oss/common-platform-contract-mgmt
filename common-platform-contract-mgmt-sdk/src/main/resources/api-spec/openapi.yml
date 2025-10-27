@@ -28,68 +28,11 @@ tags:
     description: API for managing contract term templates
   - name: Contract Risk Assessments
     description: API for managing contract risk assessments
-  - name: Contract Term Validation Rules
-    description: API for managing contract term validation rules
   - name: Global Contract Parties
     description: API for party-centric contract party queries
+  - name: Contract Term Validation Rules
+    description: API for managing contract term validation rules
 paths:
-  /api/v1/contract-parties:
-    get:
-      tags:
-        - Global Contract Parties
-      summary: Get contract parties by party ID
-      description: Returns a paginated list of all contract parties for a specific party. This endpoint is useful for finding all contracts a party is involved in.
-      operationId: getContractPartiesByPartyId
-      parameters:
-        - name: partyId
-          in: query
-          description: ID of the party to retrieve contract parties for
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: isActive
-          in: query
-          description: Filter for active contracts only
-          required: false
-          schema:
-            type: boolean
-            default: true
-      responses:
-        '200':
-          description: Successfully retrieved contract parties
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginationResponse'
-        '400':
-          description: Invalid party ID provided
-        '500':
-          description: Internal server error
-  /api/v1/contract-parties/filter:
-    post:
-      tags:
-        - Global Contract Parties
-      summary: Filter contract parties globally
-      description: Returns a paginated list of contract parties based on filter criteria across all contracts
-      operationId: filterContractPartiesGlobally
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FilterRequestContractPartyDTO'
-        required: true
-      responses:
-        '200':
-          description: Successfully retrieved contract parties
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginationResponse'
-        '400':
-          description: Invalid filter criteria provided
-        '500':
-          description: Internal server error
   /api/v1/contracts/{contractId}/terms/{termId}:
     get:
       tags:
@@ -112,6 +55,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract term
@@ -190,6 +139,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract term successfully deleted
@@ -219,6 +174,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract status history
@@ -297,6 +258,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract status history successfully deleted
@@ -326,6 +293,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract risk assessment
@@ -404,6 +377,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract risk assessment successfully deleted
@@ -433,6 +412,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract party
@@ -511,6 +496,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract party successfully deleted
@@ -540,6 +531,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract event
@@ -618,6 +615,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract event successfully deleted
@@ -647,6 +650,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract document
@@ -725,6 +734,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract document successfully deleted
@@ -747,6 +762,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract
@@ -811,6 +832,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract successfully deleted
@@ -840,6 +867,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract term validation rule
@@ -918,6 +951,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract term validation rule successfully deleted
@@ -940,6 +979,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully retrieved contract term template
@@ -1004,6 +1049,12 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
       responses:
         '204':
           description: Contract term template successfully deleted
@@ -1679,6 +1730,76 @@ paths:
                 $ref: '#/components/schemas/ContractTermTemplateDTO'
         '400':
           description: Invalid contract term template data provided
+        '500':
+          description: Internal server error
+  /api/v1/contract-parties/filter:
+    post:
+      tags:
+        - Global Contract Parties
+      summary: Filter contract parties globally
+      description: Returns a paginated list of contract parties based on filter criteria across all contracts
+      operationId: filterContractPartiesGlobally
+      parameters:
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterRequestContractPartyDTO'
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved contract parties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '400':
+          description: Invalid filter criteria provided
+        '500':
+          description: Internal server error
+  /api/v1/contract-parties:
+    get:
+      tags:
+        - Global Contract Parties
+      summary: Get contract parties by party ID
+      description: Returns a paginated list of all contract parties for a specific party. This endpoint is useful for finding all contracts a party is involved in.
+      operationId: getContractPartiesByPartyId
+      parameters:
+        - name: partyId
+          in: query
+          description: ID of the party to retrieve contract parties for
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: isActive
+          in: query
+          description: Filter for active contracts only
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - name: X-Idempotency-Key
+          in: header
+          description: Unique key for idempotent requests. If provided, ensures that identical requests with the same key will only be processed once.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved contract parties
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResponse'
+        '400':
+          description: Invalid party ID provided
         '500':
           description: Internal server error
 components:
