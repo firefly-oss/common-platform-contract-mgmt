@@ -59,11 +59,7 @@ public class GlobalContractPartyController {
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved contract parties",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = PaginationResponse.class)
-            )
+            description = "Successfully retrieved contract parties"
         ),
         @ApiResponse(
             responseCode = "400",
@@ -77,7 +73,7 @@ public class GlobalContractPartyController {
         )
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Mono<PaginationResponse<ContractPartyDTO>>> getContractPartiesByPartyId(
+    public Mono<ResponseEntity<PaginationResponse<ContractPartyDTO>>> getContractPartiesByPartyId(
             @Parameter(description = "ID of the party to retrieve contract parties for", required = true)
             @RequestParam UUID partyId,
             @Parameter(description = "Filter for active contracts only", required = false)
@@ -92,7 +88,7 @@ public class GlobalContractPartyController {
         FilterRequest<ContractPartyDTO> filterRequest = new FilterRequest<>();
         filterRequest.setFilters(criteria);
         
-        return ResponseEntity.ok(contractPartyService.filterContractParties(filterRequest));
+        return contractPartyService.filterContractParties(filterRequest).map(ResponseEntity::ok);
     }
 
     @Operation(
@@ -102,11 +98,7 @@ public class GlobalContractPartyController {
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Successfully retrieved contract parties",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = PaginationResponse.class)
-            )
+            description = "Successfully retrieved contract parties"
         ),
         @ApiResponse(
             responseCode = "400",
@@ -120,8 +112,8 @@ public class GlobalContractPartyController {
         )
     })
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Mono<PaginationResponse<ContractPartyDTO>>> filterContractPartiesGlobally(
+    public Mono<ResponseEntity<PaginationResponse<ContractPartyDTO>>> filterContractPartiesGlobally(
             @Valid @RequestBody FilterRequest<ContractPartyDTO> filterRequest) {
-        return ResponseEntity.ok(contractPartyService.filterContractParties(filterRequest));
+        return contractPartyService.filterContractParties(filterRequest).map(ResponseEntity::ok);
     }
 }
