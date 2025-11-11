@@ -114,6 +114,8 @@
                             <apiPackage>com.firefly.core.contract.sdk.api</apiPackage>
                             <modelPackage>com.firefly.core.contract.sdk.model</modelPackage>
                             <invokerPackage>com.firefly.core.contract.sdk.invoker</invokerPackage>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <java20>true</java20>
                                 <useTags>true</useTags>
